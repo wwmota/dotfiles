@@ -24,3 +24,7 @@ curl -fLo ~/.local/share/nvim/site/autoload/plug.vim --create-dirs \
 ## [joshdick/onedark.vim](https://github.com/joshdick/onedark.vim)
 
 A dark Vim/Neovim color scheme inspired by Atom's One Dark syntax theme.
+
+## [itchyny/lightline.vim](https://github.com/itchyny/lightline.vim)
+
+A light and configurable statusline/tabline plugin for Vim
