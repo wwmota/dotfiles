@@ -3,6 +3,7 @@
 call plug#begin('~/.vim/plugged')
 Plug 'joshdick/onedark.vim'
 Plug 'itchyny/lightline.vim'
+Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 call plug#end()
 
 set number
@@ -12,3 +13,6 @@ colorscheme onedark
 
 " itchyny/lightline.vim
 let g:lightline = {'colorscheme': 'onedark'}
+
+" scrooloose/nerdtree
+nmap <C-e> :NERDTreeToggle<CR>

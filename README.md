@@ -28,3 +28,11 @@ A dark Vim/Neovim color scheme inspired by Atom's One Dark syntax theme.
 ## [itchyny/lightline.vim](https://github.com/itchyny/lightline.vim)
 
 A light and configurable statusline/tabline plugin for Vim
+
+## [scrooloose/nerdtree](https://github.com/scrooloose/nerdtree)
+
+A tree explorer plugin for vim.
+
+### Usage
+
+* `Ctrl-e` : `:NERDTreeToggle`
