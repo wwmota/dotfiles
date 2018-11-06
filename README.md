@@ -36,3 +36,7 @@ A tree explorer plugin for vim.
 ### Usage
 
 * `Ctrl-e` : `:NERDTreeToggle`
+
+## [majutsushi/tagbar](https://github.com/majutsushi/tagbar)
+
+Vim plugin that displays tags in a window, ordered by scope
