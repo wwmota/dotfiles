@@ -4,6 +4,7 @@ call plug#begin('~/.vim/plugged')
 Plug 'joshdick/onedark.vim'
 Plug 'itchyny/lightline.vim'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'majutsushi/tagbar', { 'on': 'TagbarToggle' }
 call plug#end()
 
 set number
@@ -16,3 +17,6 @@ let g:lightline = {'colorscheme': 'onedark'}
 
 " scrooloose/nerdtree
 nmap <C-e> :NERDTreeToggle<CR>
+
+" majutsushi/tagbar
+nmap <F8> :TagbarToggle<CR>
