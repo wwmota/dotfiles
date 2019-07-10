@@ -13,7 +13,13 @@ fi
 # Customize to your needs...
 
 # zsh
+HISTSIZE=100000
+SAVEHIST=100000
 unsetopt CORRECT
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
 
 # variable
 export TERM=xterm-256color
@@ -24,6 +30,9 @@ alias vi=nvim
 alias vim=nvim
 alias top=htop
 alias cat=bat
+alias ls=lsd
+alias ll='ls -l'
+alias la='ls -la'
 alias gst='git status'
 alias gd='git diff'
 alias -g H='| head'
@@ -61,7 +70,8 @@ export PATH="$HOME/.cargo/bin:$PATH"
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_OPTS='--height 40% --reverse'
+export FZF_DEFAULT_COMMAND="fd --type file --color=always"
+export FZF_DEFAULT_OPTS="--height 40% --reverse --ansi"
 
 # ghq
 gf() {
