@@ -25,6 +25,7 @@ setopt NO_BEEP
 # variable
 export TERM=xterm-256color
 export EDITOR=vim
+export VISUAL=vim
 export LESS='-qR'
 
 # alias
