@@ -23,7 +23,7 @@ setopt SHARE_HISTORY
 setopt NO_BEEP
 
 # variable
-# export TERM=xterm-256color
+export TERM=xterm-256color
 export EDITOR=vim
 export LESS='-qR'
 
