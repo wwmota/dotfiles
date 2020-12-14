@@ -23,10 +23,12 @@ setopt SHARE_HISTORY
 setopt NO_BEEP
 
 # variable
+export COLORTERM=24bit
 export TERM=xterm-256color
 export EDITOR=vim
 export VISUAL=vim
 export LESS='-qR'
+export GHQ_ROOT=${HOME}/.ghq
 
 # alias
 alias ll='ls -l'
@@ -64,6 +66,7 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 if (( $+commands[pyenv] )); then
   eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
 fi
 
 # rbenv
@@ -81,22 +84,22 @@ if (( $+commands[goenv] )); then
   eval "$(goenv init -)"
 fi
 
-# nvm
-if (( $+commands[nvm] )); then
-  export NVM_DIR="$HOME/.nvm"
-  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-  [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
+# fnm
+if (( $+commands[fnm] )); then
+  eval "$(fnm env)"
 fi
 
 # rust
 export PATH="$HOME/.cargo/bin:$PATH"
 
+# zoxide
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
+fi
+
 # tools
 if (( $+commands[htop] )); then
   alias top=htop
-fi
-if (( $+commands[bat] )); then
-  alias cat=bat
 fi
 if (( $+commands[lsd] )); then
   alias ls=lsd
