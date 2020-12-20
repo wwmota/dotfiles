@@ -13,6 +13,7 @@ fi
 # Customize to your needs...
 
 # zsh
+typeset -U path PATH
 HISTSIZE=100000
 SAVEHIST=100000
 unsetopt CORRECT
@@ -55,34 +56,34 @@ if (( $+commands[fzf] )); then
 fi
 
 # ghq
-gf() {
-  local dir
-  dir=$(ghq list > /dev/null | fzf) &&
-    cd $(ghq root)/$dir
-}
+if (( $+commands[ghq] )); then
+  gf() {
+    local dir
+    dir=$(ghq list > /dev/null | fzf) &&
+      cd $(ghq root)/$dir
+  }
+fi
 
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-if (( $+commands[pyenv] )); then
-  eval "$(pyenv init -)"
+pyenv() {
+  unfunction "$0"
+  eval "$(pyenv init - --no-rehash)"
   eval "$(pyenv virtualenv-init -)"
-fi
-
-# rbenv
-export PATH="$HOME/.rbenv/bin:$PATH"
-if (( $+commands[rbenv] )); then
-  eval "$(rbenv init -)"
-fi
+  $0 "$@"
+}
 
 # goenv
 export GOENV_ROOT="$HOME/.goenv"
 export PATH="$GOENV_ROOT/bin:$PATH"
-export GOPATH=$HOME/.go
-export PATH=$PATH:$GOPATH/bin
-if (( $+commands[goenv] )); then
-  eval "$(goenv init -)"
-fi
+goenv() {
+  unfunction "$0"
+  export GOPATH=$HOME/.go
+  export PATH="$GOPATH/bin:$PATH"
+  eval "$(goenv init - --no-rehash)"
+  $0 "$@"
+}
 
 # fnm
 if (( $+commands[fnm] )); then
@@ -90,17 +91,28 @@ if (( $+commands[fnm] )); then
 fi
 
 # rust
-export PATH="$HOME/.cargo/bin:$PATH"
-
-# zoxide
-if (( $+commands[zoxide] )); then
-  eval "$(zoxide init zsh)"
+if (( $+commands[rustc] )); then
+  export PATH="$HOME/.cargo/bin:$PATH"
 fi
 
 # tools
+if (( $+commands[broot] )); then
+  source $HOME/.config/broot/launcher/bash/br
+fi
 if (( $+commands[htop] )); then
   alias top=htop
 fi
 if (( $+commands[lsd] )); then
   alias ls=lsd
+fi
+if (( $+commands[starship] )); then
+  eval "$(starship init zsh)"
+fi
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
+fi
+
+# wsl
+if [[ "$(uname -r)" == *microsoft* ]]; then
+  export PATH="/mnt/c/Program\ Files/Docker/Docker/resources/bin:/mnt/c/ProgramData/DockerDesktop/version-bin:$PATH"
 fi

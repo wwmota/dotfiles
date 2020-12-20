@@ -30,14 +30,15 @@ Plug 'jiangmiao/auto-pairs'
 " Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
+set termguicolors
 set number
 set expandtab
 set tabstop=2
 set shiftwidth=2
 let mapleader = ","
 
-let g:python_host_prog = $HOME . '/.pyenv/versions/2.7.16/bin/python'
-let g:python3_host_prog = $HOME . '/.pyenv/versions/3.7.4/bin/python'
+" let g:python_host_prog = $HOME . '/.pyenv/versions/neovim-2/bin/python'
+let g:python3_host_prog = $HOME . '/.pyenv/versions/neovim-3/bin/python'
 
 " map
 nmap ss :split<Return><C-w>w
