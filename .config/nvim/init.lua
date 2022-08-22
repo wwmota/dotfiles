@@ -27,6 +27,7 @@ keymap.set('n', '<Leader>tl', '<Cmd>Telescope live_grep<CR>')
 keymap.set('n', '<Leader>tc', '<Cmd>Telescope commands<CR>')
 keymap.set('n', '<Leader>tk', '<Cmd>Telescope keymaps<CR>')
 keymap.set('n', '<Leader>tg', '<Cmd>Telescope git_commits<CR>')
+keymap.set('n', '<Leader>w', '<Cmd>WhichKey<CR>')
 keymap.set('n', '<Tab>', '<Cmd>BufferLineCycleNext<CR>')
 keymap.set('n', '<S-Tab>', '<Cmd>BufferLineCyclePrev<CR>')
 
@@ -79,3 +80,5 @@ require('bufferline').setup {
     show_close_icon = false,
   }
 }
+-- folke/which-key.nvim
+require('which-key').setup()

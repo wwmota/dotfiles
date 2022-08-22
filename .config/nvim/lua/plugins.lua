@@ -13,4 +13,5 @@ return require('packer').startup(function(use)
   use 'lukas-reineke/indent-blankline.nvim'
   use 'lewis6991/gitsigns.nvim'
   use {'akinsho/bufferline.nvim', tag = "v2.*"}
+  use 'folke/which-key.nvim'
 end)
