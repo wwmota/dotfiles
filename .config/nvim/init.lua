@@ -82,3 +82,7 @@ require('bufferline').setup {
 }
 -- folke/which-key.nvim
 require('which-key').setup()
+-- windwp/nvim-autopairs
+require('nvim-autopairs').setup()
+-- windwp/nvim-ts-autotag
+require('nvim-ts-autotag').setup()
