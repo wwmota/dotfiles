@@ -7,6 +7,19 @@ vim.opt.termguicolors = true
 vim.g.mapleader = ','
 
 -- keymap
+local keymap = vim.keymap
+keymap.set('n', 'ss', ':split<Return><C-w>w')
+keymap.set('n', 'sv', ':vsplit<Return><C-w>w')
+keymap.set('n', '<Space>', '<C-w>w')
+keymap.set('n', 'sh', '<C-w>h')
+keymap.set('n', 'sk', '<C-w>k')
+keymap.set('n', 'sj', '<C-w>j')
+keymap.set('n', 'sl', '<C-w>l')
+keymap.set('n', '<C-w><C-l>', '<C-w><')
+keymap.set('n', '<C-w><C-h>', '<C-w>>')
+keymap.set('n', '<C-w><C-j>', '<C-w>+')
+keymap.set('n', '<C-w><C-k>', '<C-w>-')
+
 vim.keymap.set('n', '<C-e>', '<Cmd>Telescope file_browser<CR>')
 vim.keymap.set('n', '<C-p>', '<Cmd>Telescope oldfiles<CR>')
 vim.keymap.set('n', '<Leader>tf', '<Cmd>Telescope find_files<CR>')

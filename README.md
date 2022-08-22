@@ -5,5 +5,5 @@
 - [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons)
 - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim)
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
-- [telescope-file-browser.nvim](nvim-telescope/telescope-file-browser.nvim)
+- [telescope-file-browser.nvim](https://github.com/nvim-telescope/telescope-file-browser.nvim)
 
