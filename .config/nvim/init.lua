@@ -66,3 +66,5 @@ require('indent_blankline').setup {
   show_current_context = true,
   show_current_context_start = true,
 }
+-- lewis6991/gitsigns.nvim
+require('gitsigns').setup()

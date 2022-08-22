@@ -10,4 +10,4 @@
 - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
 - [Comment.nvim](https://github.com/numToStr/Comment.nvim)
 - [indent-blankline.nvim](https://github.com/lukas-reineke/indent-blankline.nvim)
-
+- [gitsigns.nvim](https://github.com/lewis6991/gitsigns.nvim)
