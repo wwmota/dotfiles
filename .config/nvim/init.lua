@@ -37,4 +37,25 @@ require('lualine').setup()
 -- nvim-telescope/telescope.nvim
 require('telescope').setup()
 require('telescope').load_extension 'file_browser'
-
+-- nvim-treesitter/nvim-treesitter
+require('nvim-treesitter.configs').setup {
+  highlight = {
+    enable = true,
+    disable = {},
+  },
+  ensure_installed = {
+    "bash",
+    "css",
+    "dockerfile",
+    "html",
+    "javascript",
+    "json",
+    "lua",
+    "markdown",
+    "python",
+    "sql",
+    "tsx",
+    "typescript",
+    "yaml",
+  },
+}
