@@ -20,13 +20,15 @@ keymap.set('n', '<C-w><C-h>', '<C-w>>')
 keymap.set('n', '<C-w><C-j>', '<C-w>+')
 keymap.set('n', '<C-w><C-k>', '<C-w>-')
 
-vim.keymap.set('n', '<C-e>', '<Cmd>Telescope file_browser<CR>')
-vim.keymap.set('n', '<C-p>', '<Cmd>Telescope oldfiles<CR>')
-vim.keymap.set('n', '<Leader>tf', '<Cmd>Telescope find_files<CR>')
-vim.keymap.set('n', '<Leader>tl', '<Cmd>Telescope live_grep<CR>')
-vim.keymap.set('n', '<Leader>tc', '<Cmd>Telescope commands<CR>')
-vim.keymap.set('n', '<Leader>tk', '<Cmd>Telescope keymaps<CR>')
-vim.keymap.set('n', '<Leader>tg', '<Cmd>Telescope git_commits<CR>')
+keymap.set('n', '<C-e>', '<Cmd>Telescope file_browser<CR>')
+keymap.set('n', '<C-p>', '<Cmd>Telescope oldfiles<CR>')
+keymap.set('n', '<Leader>tf', '<Cmd>Telescope find_files<CR>')
+keymap.set('n', '<Leader>tl', '<Cmd>Telescope live_grep<CR>')
+keymap.set('n', '<Leader>tc', '<Cmd>Telescope commands<CR>')
+keymap.set('n', '<Leader>tk', '<Cmd>Telescope keymaps<CR>')
+keymap.set('n', '<Leader>tg', '<Cmd>Telescope git_commits<CR>')
+keymap.set('n', '<Tab>', '<Cmd>BufferLineCycleNext<CR>')
+keymap.set('n', '<S-Tab>', '<Cmd>BufferLineCyclePrev<CR>')
 
 -- EdenEast/nightfox.nvim
 vim.cmd('colorscheme nightfox')
@@ -68,3 +70,12 @@ require('indent_blankline').setup {
 }
 -- lewis6991/gitsigns.nvim
 require('gitsigns').setup()
+-- akinsho/bufferline.nvim
+require('bufferline').setup {
+  options = {
+    separator_style = 'slant',
+    always_show_bufferline = false,
+    show_buffer_close_icons = false,
+    show_close_icon = false,
+  }
+}

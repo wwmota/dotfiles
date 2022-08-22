@@ -8,11 +8,9 @@ return require('packer').startup(function(use)
   use 'nvim-lua/plenary.nvim'
   use {'nvim-telescope/telescope.nvim', tag = '0.1.0'}
   use 'nvim-telescope/telescope-file-browser.nvim'
-  use {
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
-  }
+  use {'nvim-treesitter/nvim-treesitter', run = ':TSUpdate'}
   use 'numToStr/Comment.nvim'
   use 'lukas-reineke/indent-blankline.nvim'
   use 'lewis6991/gitsigns.nvim'
+  use {'akinsho/bufferline.nvim', tag = "v2.*"}
 end)
