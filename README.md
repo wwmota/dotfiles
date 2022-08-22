@@ -16,3 +16,4 @@
 - [nvim-autopairs](https://github.com/windwp/nvim-autopairs)
 - [nvim-ts-autotag](https://github.com/windwp/nvim-ts-autotag)
 - [hop.nvim](https://github.com/phaazon/hop.nvim)
+- [nvim-surround](https://github.com/kylechui/nvim-surround)

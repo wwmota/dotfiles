@@ -89,3 +89,5 @@ require('nvim-autopairs').setup()
 require('nvim-ts-autotag').setup()
 -- phaazon/hop.nvim
 require('hop').setup()
+-- kylechui/nvim-surround
+require('nvim-surround').setup()
