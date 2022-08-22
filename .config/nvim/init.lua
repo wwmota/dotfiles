@@ -59,3 +59,5 @@ require('nvim-treesitter.configs').setup {
     "yaml",
   },
 }
+-- numToStr/Comment.nvim
+require('Comment').setup()

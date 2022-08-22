@@ -8,4 +8,5 @@
 - [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim)
 - [telescope-file-browser.nvim](https://github.com/nvim-telescope/telescope-file-browser.nvim)
 - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
+- [Comment.nvim](https://github.com/numToStr/Comment.nvim)
 
