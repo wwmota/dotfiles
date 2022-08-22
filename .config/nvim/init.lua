@@ -61,3 +61,8 @@ require('nvim-treesitter.configs').setup {
 }
 -- numToStr/Comment.nvim
 require('Comment').setup()
+-- rukas-reineke/indent-blankline.nvim
+require('indent_blankline').setup {
+  show_current_context = true,
+  show_current_context_start = true,
+}

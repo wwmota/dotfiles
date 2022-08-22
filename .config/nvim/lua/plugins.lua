@@ -13,5 +13,6 @@ return require('packer').startup(function(use)
     run = ':TSUpdate'
   }
   use 'numToStr/Comment.nvim'
+  use 'lukas-reineke/indent-blankline.nvim'
 end)
 
