@@ -22,6 +22,7 @@ keymap.set('n', '<C-w><C-k>', '<C-w>-')
 
 keymap.set('n', '<C-e>', '<Cmd>Telescope file_browser<CR>')
 keymap.set('n', '<C-p>', '<Cmd>Telescope oldfiles<CR>')
+keymap.set('n', '<Leader>h', '<Cmd>HopChar1<CR>')
 keymap.set('n', '<Leader>tf', '<Cmd>Telescope find_files<CR>')
 keymap.set('n', '<Leader>tl', '<Cmd>Telescope live_grep<CR>')
 keymap.set('n', '<Leader>tc', '<Cmd>Telescope commands<CR>')
@@ -86,3 +87,5 @@ require('which-key').setup()
 require('nvim-autopairs').setup()
 -- windwp/nvim-ts-autotag
 require('nvim-ts-autotag').setup()
+-- phaazon/hop.nvim
+require('hop').setup()

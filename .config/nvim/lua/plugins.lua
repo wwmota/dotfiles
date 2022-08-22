@@ -16,4 +16,5 @@ return require('packer').startup(function(use)
   use 'folke/which-key.nvim'
   use 'windwp/nvim-autopairs'
   use 'windwp/nvim-ts-autotag'
+  use 'phaazon/hop.nvim'
 end)
