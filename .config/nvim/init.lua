@@ -91,3 +91,5 @@ require('nvim-ts-autotag').setup()
 require('hop').setup()
 -- kylechui/nvim-surround
 require('nvim-surround').setup()
+-- norcalli/nvim-colorizer.lua
+require('colorizer').setup()
