@@ -26,6 +26,7 @@ keymap.set('n', '<Leader>h', '<Cmd>HopChar1<CR>')
 keymap.set('n', '<Leader>m', '<Cmd>Mason<CR>')
 keymap.set('n', '<Leader>n', '<Cmd>TermExec cmd="nodemon --exec python %"<CR><C-w>k')
 keymap.set('n', '<Leader>p', '<Cmd>TermExec cmd="python %"<CR><C-w>k')
+keymap.set('n', '<Leader>x', '<Cmd>TroubleToggle<CR>')
 keymap.set('n', '<Leader>tf', '<Cmd>Telescope find_files<CR>')
 keymap.set('n', '<Leader>tl', '<Cmd>Telescope live_grep<CR>')
 keymap.set('n', '<Leader>tc', '<Cmd>Telescope commands<CR>')
@@ -139,3 +140,5 @@ mason_lspconfig.setup_handlers {
     }
   end,
 }
+-- folke/trouble.nvim
+require('trouble').setup()

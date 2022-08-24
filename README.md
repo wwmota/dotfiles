@@ -23,3 +23,4 @@
 - [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
 - [mason.nvim](https://github.com/williamboman/mason.nvim)
 - [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)
+- [trouble.nvim](https://github.com/folke/trouble.nvim)
