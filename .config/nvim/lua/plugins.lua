@@ -12,11 +12,12 @@ return require('packer').startup(function(use)
   use 'numToStr/Comment.nvim'
   use 'lukas-reineke/indent-blankline.nvim'
   use 'lewis6991/gitsigns.nvim'
-  use {'akinsho/bufferline.nvim', tag = "v2.*"}
+  use {'akinsho/bufferline.nvim', tag = 'v2.*'}
   use 'folke/which-key.nvim'
   use 'windwp/nvim-autopairs'
   use 'windwp/nvim-ts-autotag'
   use 'phaazon/hop.nvim'
   use 'kylechui/nvim-surround'
   use 'norcalli/nvim-colorizer.lua'
+  use {'akinsho/toggleterm.nvim', tag = 'v2.*'}
 end)

@@ -23,6 +23,8 @@ keymap.set('n', '<C-w><C-k>', '<C-w>-')
 keymap.set('n', '<C-e>', '<Cmd>Telescope file_browser<CR>')
 keymap.set('n', '<C-p>', '<Cmd>Telescope oldfiles<CR>')
 keymap.set('n', '<Leader>h', '<Cmd>HopChar1<CR>')
+keymap.set('n', '<Leader>n', '<Cmd>TermExec cmd="nodemon --exec python %"<CR><C-w>k')
+keymap.set('n', '<Leader>p', '<Cmd>TermExec cmd="python %"<CR><C-w>k')
 keymap.set('n', '<Leader>tf', '<Cmd>Telescope find_files<CR>')
 keymap.set('n', '<Leader>tl', '<Cmd>Telescope live_grep<CR>')
 keymap.set('n', '<Leader>tc', '<Cmd>Telescope commands<CR>')
@@ -93,3 +95,14 @@ require('hop').setup()
 require('nvim-surround').setup()
 -- norcalli/nvim-colorizer.lua
 require('colorizer').setup()
+-- akinsho/toggleterm.nvim
+require('toggleterm').setup()
+function _G.set_terminal_keymaps()
+  local opts = {buffer = 0}
+  vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], opts)
+  vim.keymap.set('t', '<C-w>h', [[<Cmd>wincmd h<CR>]], opts)
+  vim.keymap.set('t', '<C-w>j', [[<Cmd>wincmd j<CR>]], opts)
+  vim.keymap.set('t', '<C-w>k', [[<Cmd>wincmd k<CR>]], opts)
+  vim.keymap.set('t', '<C-w>l', [[<Cmd>wincmd l<CR>]], opts)
+end
+vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
