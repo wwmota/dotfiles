@@ -23,6 +23,7 @@ keymap.set('n', '<C-w><C-k>', '<C-w>-')
 keymap.set('n', '<C-e>', '<Cmd>Telescope file_browser<CR>')
 keymap.set('n', '<C-p>', '<Cmd>Telescope oldfiles<CR>')
 keymap.set('n', '<Leader>h', '<Cmd>HopChar1<CR>')
+keymap.set('n', '<Leader>m', '<Cmd>Mason<CR>')
 keymap.set('n', '<Leader>n', '<Cmd>TermExec cmd="nodemon --exec python %"<CR><C-w>k')
 keymap.set('n', '<Leader>p', '<Cmd>TermExec cmd="python %"<CR><C-w>k')
 keymap.set('n', '<Leader>tf', '<Cmd>Telescope find_files<CR>')
@@ -109,3 +110,32 @@ end
 vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
 -- folke/todo-comments.nvim
 require('todo-comments').setup()
+-- neovim/nvim-lspconfig
+-- williamboman/mason.nvim
+-- williamboman/mason-lspconfig.nvim
+require('mason').setup()
+local mason_lspconfig = require('mason-lspconfig')
+mason_lspconfig.setup({
+  ensure_installed = {
+    "bashls",
+    "dockerls",
+    "jsonls",
+    "pyright",
+    "sumneko_lua",
+    "tsserver"
+  }
+})
+mason_lspconfig.setup_handlers {
+  function (server_name)
+    require('lspconfig')[server_name].setup {
+      on_attach = on_attach,
+      handlers = {
+        ['textDocument/publishDiagnostics'] = vim.lsp.with(
+          vim.lsp.diagnostic.on_publish_diagnostics, {
+            virtual_text = false
+          }
+        ),
+      },
+    }
+  end,
+}

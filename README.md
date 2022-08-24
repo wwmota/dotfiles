@@ -20,3 +20,6 @@
 - [nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua)
 - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
 - [todo-comments.nvim](https://github.com/folke/todo-comments.nvim)
+- [nvim-lspconfig](https://github.com/neovim/nvim-lspconfig)
+- [mason.nvim](https://github.com/williamboman/mason.nvim)
+- [mason-lspconfig.nvim](https://github.com/williamboman/mason-lspconfig.nvim)

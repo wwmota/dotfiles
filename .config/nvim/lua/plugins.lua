@@ -21,4 +21,7 @@ return require('packer').startup(function(use)
   use 'norcalli/nvim-colorizer.lua'
   use {'akinsho/toggleterm.nvim', tag = 'v2.*'}
   use 'folke/todo-comments.nvim'
+  use 'neovim/nvim-lspconfig'
+  use 'williamboman/mason.nvim'
+  use 'williamboman/mason-lspconfig.nvim'
 end)
