@@ -30,6 +30,7 @@ keymap.set('n', '<Leader>tl', '<Cmd>Telescope live_grep<CR>')
 keymap.set('n', '<Leader>tc', '<Cmd>Telescope commands<CR>')
 keymap.set('n', '<Leader>tk', '<Cmd>Telescope keymaps<CR>')
 keymap.set('n', '<Leader>tg', '<Cmd>Telescope git_commits<CR>')
+keymap.set('n', '<Leader>tt', '<Cmd>TodoTelescope<CR>')
 keymap.set('n', '<Leader>w', '<Cmd>WhichKey<CR>')
 keymap.set('n', '<Tab>', '<Cmd>BufferLineCycleNext<CR>')
 keymap.set('n', '<S-Tab>', '<Cmd>BufferLineCyclePrev<CR>')
@@ -106,3 +107,5 @@ function _G.set_terminal_keymaps()
   vim.keymap.set('t', '<C-w>l', [[<Cmd>wincmd l<CR>]], opts)
 end
 vim.cmd('autocmd! TermOpen term://* lua set_terminal_keymaps()')
+-- folke/todo-comments.nvim
+require('todo-comments').setup()

@@ -19,3 +19,4 @@
 - [nvim-surround](https://github.com/kylechui/nvim-surround)
 - [nvim-colorizer.lua](https://github.com/norcalli/nvim-colorizer.lua)
 - [toggleterm.nvim](https://github.com/akinsho/toggleterm.nvim)
+- [todo-comments.nvim](https://github.com/folke/todo-comments.nvim)

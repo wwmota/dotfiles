@@ -20,4 +20,5 @@ return require('packer').startup(function(use)
   use 'kylechui/nvim-surround'
   use 'norcalli/nvim-colorizer.lua'
   use {'akinsho/toggleterm.nvim', tag = 'v2.*'}
+  use 'folke/todo-comments.nvim'
 end)
