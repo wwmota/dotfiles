@@ -20,6 +20,12 @@ keymap.set('n', '<C-w><C-h>', '<C-w>>')
 keymap.set('n', '<C-w><C-j>', '<C-w>+')
 keymap.set('n', '<C-w><C-k>', '<C-w>-')
 
+vim.keymap.set('n', '<Leader>wa', vim.lsp.buf.add_workspace_folder)
+vim.keymap.set('n', '<Leader>wr', vim.lsp.buf.remove_workspace_folder)
+vim.keymap.set('n', '<Leader>wl', function()
+  print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+end)
+
 keymap.set('n', '<C-e>', '<Cmd>Telescope file_browser<CR>')
 keymap.set('n', '<C-p>', '<Cmd>Telescope oldfiles<CR>')
 keymap.set('n', '<Leader>h', '<Cmd>HopChar1<CR>')
@@ -142,3 +148,61 @@ mason_lspconfig.setup_handlers {
 }
 -- folke/trouble.nvim
 require('trouble').setup()
+-- glepnir/lspsaga.nvim
+require('lspsaga').init_lsp_saga()
+-- onsails/lspkind.nvim
+-- hrsh7th/nvim-cmp
+-- hrsh7th/cmp-nvim-lsp
+-- hrsh7th/cmp-buffer
+-- hrsh7th/cmp-path
+-- hrsh7th/cmp-vsnip
+-- hrsh7th/vim-vsnip
+-- rafamadriz/friendly-snippets
+local cmp = require('cmp')
+local lspkind = require('lspkind')
+cmp.setup({
+  snippet = {
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body)
+    end,
+  },
+  sources = {
+    { name = "nvim_lsp" },
+    { name = 'vsnip' },
+    { name = "buffer" },
+    { name = "path" },
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-l>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm { select = true },
+  }),
+  experimental = {
+    ghost_text = true,
+  },
+  formatting = {
+    format = lspkind.cmp_format({
+      mode = 'symbol_text',
+      maxwidth = 50
+    })
+  }
+})
+local opts = { silent=true }
+vim.keymap.set('n', 'gh', '<Cmd>Lspsaga lsp_finder<CR>', opts)
+vim.keymap.set('n', 'gr', '<Cmd>Lspsaga rename<CR>', opts)
+vim.keymap.set('n', 'gd', '<Cmd>Lspsaga preview_definition<CR>', opts)
+vim.keymap.set('n', '<Leader>ca', '<Cmd>Lspsaga code_action<CR>', opts)
+vim.keymap.set('n', '<Leader>cd', '<Cmd>Lspsaga show_line_diagnostics<CR>', opts)
+vim.keymap.set('n', '[e', '<Cmd>Lspsaga diagnostic_jump_prev<CR>', opts)
+vim.keymap.set('n', ']e', '<Cmd>Lspsaga diagnostic_jump_next<CR>', opts)
+vim.keymap.set('n', '<Leader>o', '<Cmd>LSoutlineToggle<CR>', opts)
+vim.keymap.set('n', 'K', '<Cmd>Lspsaga hover_doc<CR>', opts)
+local action = require("lspsaga.action")
+vim.keymap.set('n', '<C-f>', function()
+    action.smart_scroll_with_saga(1)
+end, opts)
+vim.keymap.set('n', '<C-b>', function()
+    action.smart_scroll_with_saga(-1)
+end, opts)
