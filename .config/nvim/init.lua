@@ -1,10 +1,14 @@
 require('plugins')
 
+vim.g.mapleader = ','
 vim.opt.cursorline = true
 vim.opt.number = true
 vim.opt.termguicolors = true
-
-vim.g.mapleader = ','
+vim.opt.shiftwidth = 2
+vim.opt.tabstop = 2
+vim.opt.wrap = false
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
 -- keymap
 local keymap = vim.keymap
