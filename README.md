@@ -30,6 +30,7 @@
 - [cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp)
 - [cmp-buffer](https://github.com/hrsh7th/cmp-buffer)
 - [cmp-path](https://github.com/hrsh7th/cmp-path)
+- [cmp-cmdline](https://github.com/hrsh7th/cmp-cmdline)
 - [cmp-vsnip](https://github.com/hrsh7th/cmp-vsnip)
 - [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
 - [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)

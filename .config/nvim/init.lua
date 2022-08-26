@@ -189,6 +189,13 @@ cmp.setup({
     })
   }
 })
+cmp.setup.cmdline(':', {
+	mapping = cmp.mapping.preset.cmdline(),
+	sources = {
+		{ name = 'path' },
+		{ name = 'cmdline' },
+	},
+})
 local opts = { silent=true }
 vim.keymap.set('n', 'gh', '<Cmd>Lspsaga lsp_finder<CR>', opts)
 vim.keymap.set('n', 'gr', '<Cmd>Lspsaga rename<CR>', opts)
