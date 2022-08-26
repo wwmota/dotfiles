@@ -42,6 +42,7 @@ keymap.set('n', '<Leader>tl', '<Cmd>Telescope live_grep<CR>')
 keymap.set('n', '<Leader>tc', '<Cmd>Telescope commands<CR>')
 keymap.set('n', '<Leader>tk', '<Cmd>Telescope keymaps<CR>')
 keymap.set('n', '<Leader>tg', '<Cmd>Telescope git_commits<CR>')
+keymap.set('n', '<Leader>tp', '<Cmd>Telescope projects<CR>')
 keymap.set('n', '<Leader>tt', '<Cmd>TodoTelescope<CR>')
 keymap.set('n', '<Leader>w', '<Cmd>WhichKey<CR>')
 keymap.set('n', '<Tab>', '<Cmd>BufferLineCycleNext<CR>')
@@ -55,7 +56,8 @@ vim.cmd('colorscheme nightfox')
 require('lualine').setup()
 -- nvim-telescope/telescope.nvim
 require('telescope').setup()
-require('telescope').load_extension 'file_browser'
+require('telescope').load_extension('file_browser')
+require('telescope').load_extension('projects')
 -- nvim-treesitter/nvim-treesitter
 require('nvim-treesitter.configs').setup {
   highlight = {
@@ -217,3 +219,5 @@ end, opts)
 vim.keymap.set('n', '<C-b>', function()
     action.smart_scroll_with_saga(-1)
 end, opts)
+-- ahmedkhalf/project.nvim
+require('project_nvim').setup()
