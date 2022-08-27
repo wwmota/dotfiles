@@ -35,3 +35,4 @@
 - [vim-vsnip](https://github.com/hrsh7th/vim-vsnip)
 - [friendly-snippets](https://github.com/rafamadriz/friendly-snippets)
 - [project.nvim](https://github.com/ahmedkhalf/project.nvim)
+- [vim-illuminate](RRethy/vim-illuminate)
