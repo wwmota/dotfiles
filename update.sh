@@ -1,7 +1,7 @@
 #!/bin/bash
 
 readonly is_true=true
-readonly is_false=true
+readonly is_false=false
 
 if "${is_false}"; then
     echo apt upgrade...
@@ -66,6 +66,37 @@ if "${is_false}"; then
     fi
 fi
 
+# ghq
+if "${is_false}"; then
+    echo ghq...
+    echo before...
+    ghq --version
+    tmp=`mktemp -d`
+    url=`curl -s https://api.github.com/repos/x-motemen/ghq/releases/latest | grep browser_download_url | grep -m1 ghq_linux_amd64.zip | cut -d '"' -f 4`
+    curl -sL ${url} -o ${tmp}/ghq_linux_amd64.zip
+    unzip -q ${tmp}/ghq_linux_amd64.zip -d ${tmp}
+    sudo mv ${tmp}/ghq_linux_amd64/ghq /usr/local/bin/
+    echo after...
+    rm -rf ${tmp}
+    ghq --version
+fi
+
+# fnm
+if "${is_true}"; then
+    echo fnm...
+    echo before...
+    fnm --version
+    tmp=`mktemp -d`
+    url=`curl -s https://api.github.com/repos/Schniz/fnm/releases/latest | grep browser_download_url | grep -m1 fnm-linux.zip | cut -d '"' -f 4`
+    curl -sL ${url} -o ${tmp}/fnm-linux.zip
+    unzip -q ${tmp}/fnm-linux.zip -d ${tmp}
+    sudo mv ${tmp}/fnm /usr/local/bin/
+    sudo chmod +x /usr/local/bin/fnm
+    echo after...
+    rm -rf ${tmp}
+    fnm --version
+fi
+
 # neovim
 if "${is_false}"; then
     echo neovim...
@@ -125,6 +156,18 @@ if "${is_false}"; then
     download_rust_tool zoxide ajeetdsouza/zoxide B
 fi
 
-# fnm
 # tldr
-# ghq
+if "${is_false}"; then
+    echo tldr...
+    echo before...
+    tldr --version
+    tmp=`mktemp -d`
+    url=`curl -s https://api.github.com/repos/dbrgn/tealdeer/releases/latest | grep browser_download_url | grep -m1 tealdeer-linux-x86_64-musl | cut -d '"' -f 4`
+    curl -sL ${url} -o ${tmp}/tldr
+    sudo mv ${tmp}/tldr /usr/local/bin/
+    sudo chmod +x /usr/local/bin/tldr
+    echo after...
+    rm -rf ${tmp}
+    tldr --version
+    tldr --update
+fi
