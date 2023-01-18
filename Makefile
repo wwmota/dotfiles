@@ -9,6 +9,7 @@
 #      pyenv \
 #      pyenv-virtualenv \
 #      chezmoi \
+#      tldr \
 #      install-rust-tools \
 #      docker \
 
@@ -169,6 +170,20 @@ neovim-setup:
   # pip install neovim
 	npm install -g neovim
 	npm install -g tree-sitter-cli
+
+.PHONY: tldr
+tldr:
+	@echo before...
+	-tldr --version
+	$(eval tmp := $(shell mktemp -d))
+	$(eval url := $(shell curl -s https://api.github.com/repos/dbrgn/tealdeer/releases/latest | grep browser_download_url | grep -m1 tealdeer-linux-x86_64-musl | cut -d '"' -f 4))
+	curl -sL ${url} -o ${tmp}/tldr
+	sudo mv ${tmp}/tldr /usr/local/bin/
+	sudo chmod +x /usr/local/bin/tldr
+	@echo after...
+	rm -rf ${tmp}
+	tldr --version
+	tldr --update
 
 define _install_rust_tool
 	echo $1...
