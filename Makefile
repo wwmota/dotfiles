@@ -6,11 +6,11 @@
 #      zimfw \
 #      chsh \
 #      fzf \
-# 	 pyenv \
-# 	 pyenv-virtualenv \
-# 	 chezmoi \
-# 	 install-rust-tools \
-# 	 docker \
+#      pyenv \
+#      pyenv-virtualenv \
+#      chezmoi \
+#      install-rust-tools \
+#      docker \
 
 hoge:
 
@@ -26,7 +26,7 @@ system-update:
 
 .PHONY: install-packages
 install-packages:
-	sudo apt install jq neovim nkf pngquant tig zip zsh
+	sudo apt install jq nkf pngquant tig zip zsh
 
 .PHONY: install-packages-for-pyenv
 install-packages-for-pyenv:
@@ -47,9 +47,13 @@ docker:
 	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
 	sudo usermod -aG docker $(USER)
 
+.PHONY: wsl-systemd
+wsl-systemd:
+	sudo sh -c "echo '[boot]\nsystemd=true' > /etc/wsl.conf"
+
 .PHONY: chsh
 chsh:
-	# if [ "${SHELL}" != "/usr/bin/zsh" ]; then\ 
+	# if [ "${SHELL}" != "/usr/bin/zsh" ]; then\
 	chsh -s $(shell which zsh);\
 	# fi
 
@@ -87,6 +91,14 @@ pyenv-virtualenv:
 	else \
 	  cd ~/.pyenv/plugins/pyenv-virtualenv && git pull; \
 	fi
+
+.PHONY: go
+go:
+	$(eval tmp := $(shell mktemp -d))
+	curl -sL https://go.dev/dl/$(shell curl -sL https://go.dev/VERSION?m=text).linux-amd64.tar.gz -o $(tmp)/go-linux-amd64.tar.gz
+	sudo rm -rf /usr/local/go
+	sudo tar -C /usr/local -xzf $(tmp)/go-linux-amd64.tar.gz
+	rm -rf $(tmp)
 
 .PHONY: ghq
 ghq:
@@ -127,6 +139,36 @@ fnm:
 	@echo after...
 	rm -rf $(tmp)
 	fnm --version
+
+.PHONY: neovim
+neovim:
+	@echo before...
+	-nvim --version
+	$(eval tmp := $(shell mktemp -d))
+	$(eval url := $(shell curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep browser_download_url | grep -m1 nvim-linux64.tar.gz | cut -d '"' -f 4))
+	curl -sL ${url} -o ${tmp}/nvim-linux64.tar.gz
+	tar zxf ${tmp}/nvim-linux64.tar.gz -C ${tmp}
+	sudo rm -rf /usr/local/bin/nvim-linux64
+	sudo mv ${tmp}/nvim-linux64 /usr/local/bin/
+	sudo ln -sf /usr/local/bin/nvim-linux64/bin/nvim /usr/local/bin/nvim
+	@echo after...
+	rm -rf ${tmp}
+	nvim --version
+
+.PHONY: packer
+packer:
+	if [ ! -e ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]; then \
+	  git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim; \
+	else \
+	  cd ~/.local/share/nvim/site/pack/packer/start/packer.nvim && git pull; \
+	fi
+
+.PHONY: neovim-setup
+neovim-setup:
+  # pyenv virtualenv 3.10.9 neovim
+  # pip install neovim
+	npm install -g neovim
+	npm install -g tree-sitter-cli
 
 define _install_rust_tool
 	echo $1...
