@@ -139,6 +139,10 @@ alias dp="docker container ls"
 alias cp="cp -i"
 alias mv="mv -i"
 alias rm="rm -i"
+alias -g L="| less"
+alias -g H="| head"
+alias -g T="| tail"
+alias -g F="| fzf"
 
 # ghq
 export GHQ_ROOT=${HOME}/.ghq
