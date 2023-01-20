@@ -2,16 +2,17 @@ PYTHON_VERSION ?= 3.11.1
 NODE_VERSION ?= v18.13.0
 
 .PHONY: init
-all: hwclock \
-     system-update \
-     install-packages \
-     docker \
-     wsl-systemd \
-     tool \
-     shell \
-     language \
-     editor \
-     chezmoi-init \
+init: hwclock \
+      system-update \
+      install-packages \
+      docker \
+      wsl-systemd \
+      tool \
+      shell \
+      chezmoi-init \
+
+.PHONY: init-after-reboot
+init-after-reboot: language editor
 
 .PHONY: tool
 tool: install-binary-tools tldr-update fzf
@@ -20,7 +21,7 @@ tool: install-binary-tools tldr-update fzf
 shell: chsh zimfw
 
 .PHONY: language
-language: install-packages-for-pyenv pyenv pyenv-virtualenv node go
+language: install-packages-for-pyenv pyenv pyenv-virtualenv python node go
 
 .PHONY: editor
 editor: neovim packer neovim-setup
@@ -116,7 +117,7 @@ node:
 .PHONY: go
 go:
 	$(eval tmp := $(shell mktemp -d))
-	curl -sL https://go.dev/dl/$(shell curl -sL https://go.dev/VERSION?m=text).linux-amd64.tar.gz -o $(tmp)/go-linux-amd64.tar.gz
+	curl -L https://go.dev/dl/$(shell curl -sL https://go.dev/VERSION?m=text).linux-amd64.tar.gz -o $(tmp)/go-linux-amd64.tar.gz
 	sudo rm -rf /usr/local/go
 	sudo tar -C /usr/local -xzf $(tmp)/go-linux-amd64.tar.gz
 	rm -rf $(tmp)
