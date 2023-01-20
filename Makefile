@@ -1,19 +1,29 @@
-# .PHONY: all
-# all: hwclock \
-#      system-update \
-#      install-packages \
-#      install-packages-for-pyenv \
-#      zimfw \
-#      chsh \
-#      fzf \
-#      pyenv \
-#      pyenv-virtualenv \
-#      chezmoi \
-#      tldr \
-#      install-rust-tools \
-#      docker \
+PYTHON_VERSION ?= 3.11.1
+NODE_VERSION ?= v18.13.0
 
-hoge:
+.PHONY: init
+all: hwclock \
+     system-update \
+     install-packages \
+     docker \
+     wsl-systemd \
+     tool \
+     shell \
+     language \
+     editor \
+     chezmoi-init \
+
+.PHONY: tool
+tool: install-binary-tools tldr-update fzf
+
+.PHONY: shell
+shell: chsh zimfw
+
+.PHONY: language
+language: install-packages-for-pyenv pyenv pyenv-virtualenv node go
+
+.PHONY: editor
+editor: neovim packer neovim-setup
 
 .PHONY: hwclock
 hwclock:
@@ -54,18 +64,16 @@ wsl-systemd:
 
 .PHONY: chsh
 chsh:
-	# if [ "${SHELL}" != "/usr/bin/zsh" ]; then\
 	chsh -s $(shell which zsh);\
-	# fi
 
 .PHONY: zimfw
 zimfw:
 	if [ ! -e ~/.zim ]; then \
 	  curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh; \
 	fi
-	# source ~/.zim/init.zsh
-	# zimfw upgrade
-	# zimfw update
+	$(eval SHELL:=$(shell which zsh))
+	source ~/.zim/zimfw.zsh upgrade
+	source ~/.zim/zimfw.zsh update
 
 .PHONY: fzf
 fzf:
@@ -93,6 +101,18 @@ pyenv-virtualenv:
 	  cd ~/.pyenv/plugins/pyenv-virtualenv && git pull; \
 	fi
 
+.PHONY: python
+python:
+	pyenv install $(PYTHON_VERSION)
+	pyenv global $(PYTHON_VERSION)
+	python --version
+
+.PHONY: node
+node:
+	fnm install $(NODE_VERSION)
+	fnm default $(NODE_VERSION)
+	node --version
+
 .PHONY: go
 go:
 	$(eval tmp := $(shell mktemp -d))
@@ -100,53 +120,17 @@ go:
 	sudo rm -rf /usr/local/go
 	sudo tar -C /usr/local -xzf $(tmp)/go-linux-amd64.tar.gz
 	rm -rf $(tmp)
-
-.PHONY: ghq
-ghq:
-	@echo before...
-	-ghq --version
-	$(eval tmp := $(shell mktemp -d))
-	$(eval url := $(shell curl -s https://api.github.com/repos/x-motemen/ghq/releases/latest | grep browser_download_url | grep -m1 ghq_linux_amd64.zip | cut -d '"' -f 4))
-	curl -sL $(url) -o $(tmp)/ghq_linux_amd64.zip
-	unzip -q $(tmp)/ghq_linux_amd64.zip -d $(tmp)
-	sudo mv $(tmp)/ghq_linux_amd64/ghq /usr/local/bin/
-	@echo after...
-	rm -rf $(tmp)
-	ghq --version
-
-.PHONY: chezmoi
-chezmoi:
-	@echo before...
-	-chezmoi --version
-	$(eval tmp := $(shell mktemp -d))
-	$(eval url := $(shell curl -s https://api.github.com/repos/twpayne/chezmoi/releases/latest | grep browser_download_url | grep -m1 linux_amd64.tar.gz | cut -d '"' -f 4))
-	curl -sL $(url) -o $(tmp)/chezmoi_linux_amd64.tar.gz
-	tar zxf $(tmp)/chezmoi_linux_amd64.tar.gz -C $(tmp)
-	sudo mv $(tmp)/chezmoi /usr/local/bin/
-	@echo after...
-	rm -rf $(tmp)
-	chezmoi --version
-
-.PHONY: fnm
-fnm:
-	@echo before...
-	-fnm --version
-	$(eval tmp := $(shell mktemp -d))
-	$(eval url := $(shell curl -s https://api.github.com/repos/Schniz/fnm/releases/latest | grep browser_download_url | grep -m1 fnm-linux.zip | cut -d '"' -f 4))
-	curl -sL $(url) -o $(tmp)/fnm-linux.zip
-	unzip -q $(tmp)/fnm-linux.zip -d $(tmp)
-	sudo mv $(tmp)/fnm /usr/local/bin/
-	sudo chmod +x /usr/local/bin/fnm
-	@echo after...
-	rm -rf $(tmp)
-	fnm --version
+	go version
 
 .PHONY: neovim
 neovim:
 	@echo before...
 	-nvim --version
 	$(eval tmp := $(shell mktemp -d))
-	$(eval url := $(shell curl -s https://api.github.com/repos/neovim/neovim/releases/latest | grep browser_download_url | grep -m1 nvim-linux64.tar.gz | cut -d '"' -f 4))
+	$(eval url := $(shell curl -s https://api.github.com/repos/neovim/neovim/releases/latest | \
+	                              grep browser_download_url | \
+	                              grep -m1 nvim-linux64.tar.gz | \
+	                              cut -d '"' -f 4))
 	curl -sL ${url} -o ${tmp}/nvim-linux64.tar.gz
 	tar zxf ${tmp}/nvim-linux64.tar.gz -C ${tmp}
 	sudo rm -rf /usr/local/bin/nvim-linux64
@@ -166,52 +150,61 @@ packer:
 
 .PHONY: neovim-setup
 neovim-setup:
-  # pyenv virtualenv 3.10.9 neovim
-  # pip install neovim
+	-pyenv virtualenv $(PYTHON_VERSION) neovim
+	~/.pyenv/versions/neovim/bin/pip install neovim
 	npm install -g neovim
 	npm install -g tree-sitter-cli
 
-.PHONY: tldr
-tldr:
-	@echo before...
-	-tldr --version
-	$(eval tmp := $(shell mktemp -d))
-	$(eval url := $(shell curl -s https://api.github.com/repos/dbrgn/tealdeer/releases/latest | grep browser_download_url | grep -m1 tealdeer-linux-x86_64-musl | cut -d '"' -f 4))
-	curl -sL ${url} -o ${tmp}/tldr
-	sudo mv ${tmp}/tldr /usr/local/bin/
-	sudo chmod +x /usr/local/bin/tldr
-	@echo after...
-	rm -rf ${tmp}
-	tldr --version
-	tldr --update
-
-define _install_rust_tool
+define _install_binary_tool
 	echo $1...
 	echo before...
 	-$1 --version
 	$(eval tmp := $(shell mktemp -d))
-	$(eval url := $(shell curl -s https://api.github.com/repos/$2/releases/latest | grep browser_download_url | grep -m1 x86_64-unknown-linux-musl | cut -d '"' -f 4))
-	curl -sL $(url) -o $(tmp)/output.tar.gz
-	tar zxf $(tmp)/output.tar.gz -C $(tmp)
-	$(eval filename := $(shell basename $(url) | sed s/.tar.gz//))
-	if [ $3 = A ]; then \
+	$(eval url := $(shell curl -s https://api.github.com/repos/$2/releases/latest | \
+	                              grep browser_download_url | \
+	                              grep -m1 $3 | \
+	                              cut -d '"' -f 4))
+	if [ $4 = tar.gz ]; then \
+	  curl -sL $(url) -o $(tmp)/output.tar.gz; \
+	  tar zxf $(tmp)/output.tar.gz -C $(tmp); \
+	elif [ $4 = zip ]; then \
+	  curl -sL $(url) -o $(tmp)/output.zip; \
+	  unzip -q $(tmp)/output.zip -d $(tmp); \
+	elif [ $4 = raw ]; then \
+	  curl -sL $(url) -o $(tmp)/$1; \
+	fi
+	$(eval filename := $(shell basename $(url) | sed -e s/.tar.gz// -e s/.zip//)) \
+	if [ $5 = A ]; then \
 	  sudo mv $(tmp)/$(filename)/$1 /usr/local/bin/; \
-	elif [ $3 = B ]; then \
+	elif [ $5 = B ]; then \
 	  sudo mv $(tmp)/$1 /usr/local/bin/; \
 	fi
+	sudo chmod +x /usr/local/bin/$1
 	echo after...
 	rm -rf $(tmp)
 	$1 --version
 endef
 
-.PHONY: install-rust-tools
-install-rust-tools:
-	@$(call _install_rust_tool,bat,sharkdp/bat,A)
-	@$(call _install_rust_tool,delta,dandavison/delta,A)
-	@$(call _install_rust_tool,fd,sharkdp/fd,A)
-	@$(call _install_rust_tool,lsd,Peltoche/lsd,A)
-	@$(call _install_rust_tool,pastel,sharkdp/pastel,A)
-	@$(call _install_rust_tool,rg,BurntSushi/ripgrep,A)
-	@$(call _install_rust_tool,starship,starship/starship,B)
-	@$(call _install_rust_tool,xsv,BurntSushi/xsv, B)
-	@$(call _install_rust_tool,zoxide,ajeetdsouza/zoxide,B)
+.PHONY: install-binary-tools
+install-binary-tools:
+	@$(call _install_binary_tool,bat,sharkdp/bat,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_binary_tool,chezmoi,twpayne/chezmoi,linux-musl_amd64.tar.gz,tar.gz,B)
+	@$(call _install_binary_tool,delta,dandavison/delta,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_binary_tool,fd,sharkdp/fd,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_binary_tool,fnm,Schniz/fnm,fnm-linux.zip,zip,B)
+	@$(call _install_binary_tool,ghq,x-motemen/ghq,ghq_linux_amd64.zip,zip,A)
+	@$(call _install_binary_tool,lsd,Peltoche/lsd,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_binary_tool,pastel,sharkdp/pastel,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_binary_tool,rg,BurntSushi/ripgrep,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_binary_tool,starship,starship/starship,x86_64-unknown-linux-musl,tar.gz,B)
+	@$(call _install_binary_tool,tldr,dbrgn/tealdeer,tealdeer-linux-x86_64-musl,raw,B)
+	@$(call _install_binary_tool,xsv,BurntSushi/xsv,x86_64-unknown-linux-musl,tar.gz,B)
+	@$(call _install_binary_tool,zoxide,ajeetdsouza/zoxide,x86_64-unknown-linux-musl,tar.gz,B)
+
+.PHONY: chezmoi-init
+chezmoi-init:
+	chezmoi init --apply https://github.com/wwmota/dotfiles.git
+
+.PHONY: tldr-update
+tldr-update:
+	tldr --update
