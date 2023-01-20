@@ -15,7 +15,7 @@ init: hwclock \
 init-after-reboot: language editor
 
 .PHONY: tool
-tool: install-binary-tools tldr-update fzf
+tool: install-binary-tools tldr-update fzf tpm
 
 .PHONY: shell
 shell: chsh zimfw
@@ -83,6 +83,14 @@ fzf:
 	  ~/.fzf/install; \
 	else \
 	  cd ~/.fzf && git pull && yes | ./install; \
+	fi
+
+.PHONY: tpm
+tpm:
+	if [ ! -e ~/.tmux/plugins/tpm ]; then \
+	  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm; \
+	else \
+	  cd ~/.tmux/plugins/tpm && git pull; \
 	fi
 
 .PHONY: pyenv
