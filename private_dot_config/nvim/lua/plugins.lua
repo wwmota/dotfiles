@@ -38,4 +38,5 @@ return require('packer').startup(function(use)
   use 'ahmedkhalf/project.nvim'
   use 'RRethy/vim-illuminate'
   use 'TimUntersberger/neogit'
+  use 'editorconfig/editorconfig-vim'
 end)

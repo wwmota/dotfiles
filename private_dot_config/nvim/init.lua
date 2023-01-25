@@ -5,12 +5,9 @@ vim.g.python3_host_prog = os.getenv('HOME') .. '/.pyenv/versions/neovim/bin/pyth
 vim.opt.cursorline = true
 vim.opt.number = true
 vim.opt.termguicolors = true
-vim.opt.shiftwidth = 2
-vim.opt.tabstop = 2
 vim.opt.wrap = false
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
-vim.opt.expandtab = true
 
 -- keymap
 local keymap = vim.keymap
