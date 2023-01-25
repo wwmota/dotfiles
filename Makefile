@@ -38,7 +38,7 @@ system-update:
 
 .PHONY: install-packages
 install-packages:
-	sudo apt install jq nkf pngquant tig zip zsh
+	sudo apt install graphviz jq nkf pngquant tig zip zsh
 
 .PHONY: install-packages-for-pyenv
 install-packages-for-pyenv:
@@ -187,6 +187,8 @@ define _install_binary_tool
 	  sudo mv $(tmp)/$(filename)/$1 /usr/local/bin/; \
 	elif [ $5 = B ]; then \
 	  sudo mv $(tmp)/$1 /usr/local/bin/; \
+	elif [ $5 = C ]; then \
+	  sudo mv $(tmp)/$(filename)/bin/$1 /usr/local/bin/; \
 	fi
 	sudo chmod +x /usr/local/bin/$1
 	echo after...
@@ -201,6 +203,7 @@ install-binary-tools:
 	@$(call _install_binary_tool,delta,dandavison/delta,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_binary_tool,fd,sharkdp/fd,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_binary_tool,fnm,Schniz/fnm,fnm-linux.zip,zip,B)
+	@$(call _install_binary_tool,gh,cli/cli,linux_386.tar.gz,tar.gz,C)
 	@$(call _install_binary_tool,ghq,x-motemen/ghq,ghq_linux_amd64.zip,zip,A)
 	@$(call _install_binary_tool,lsd,Peltoche/lsd,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_binary_tool,pastel,sharkdp/pastel,x86_64-unknown-linux-musl,tar.gz,A)
