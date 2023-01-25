@@ -15,7 +15,7 @@ init: hwclock \
 init-after-reboot: language editor
 
 .PHONY: tool
-tool: install-binary-tools tldr-update fzf tpm
+tool: install-binary-tools tldr-update fzf tpm aws-cli
 
 .PHONY: shell
 shell: chsh zimfw
@@ -93,6 +93,18 @@ tpm:
 	  cd ~/.tmux/plugins/tpm && git pull; \
 	fi
 
+.PHONY: aws-cli
+aws-cli:
+	@echo before...
+	-aws --version
+	$(eval tmp := $(shell mktemp -d))
+	curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o $(tmp)/awscliv2.zip
+	unzip -q $(tmp)/awscliv2.zip -d $(tmp)
+	sudo $(tmp)/aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+	@echo after...
+	rm -rf $(tmp)
+	aws --version
+
 .PHONY: pyenv
 pyenv:
 	if [ ! -e ~/.pyenv ]; then \
@@ -124,10 +136,13 @@ node:
 
 .PHONY: go
 go:
+	@echo before...
+	-go version
 	$(eval tmp := $(shell mktemp -d))
 	curl -L https://go.dev/dl/$(shell curl -sL https://go.dev/VERSION?m=text).linux-amd64.tar.gz -o $(tmp)/go-linux-amd64.tar.gz
 	sudo rm -rf /usr/local/go
 	sudo tar -C /usr/local -xzf $(tmp)/go-linux-amd64.tar.gz
+	@echo after...
 	rm -rf $(tmp)
 	go version
 
