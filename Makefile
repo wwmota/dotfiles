@@ -156,6 +156,7 @@ packer:
 	else \
 	  cd ~/.local/share/nvim/site/pack/packer/start/packer.nvim && git pull; \
 	fi
+	nvim +PackerSync
 
 .PHONY: neovim-setup
 neovim-setup:
