@@ -129,9 +129,21 @@ unset key
 # }}} End configuration added by Zim install
 
 # original setting
+HISTSIZE=100000
+SAVEHIST=100000
+setopt HIST_NO_STORE
+setopt HIST_REDUCE_BLANKS
+setopt NO_BEEP
 export COLORTERM="truecolor"
+export EDITOR=vim
+export VISUAL=vim
+export LESS="-i -M -R"
 
 # alias
+alias cp="cp -i"
+alias mv="mv -i"
+alias rm="rm -i"
+alias la="ls -lha"
 alias gst="git status"
 alias gd="git diff"
 alias di="docker image ls"
@@ -139,9 +151,6 @@ alias dp="docker container ls"
 alias dcb="docker compose build"
 alias dcd="docker compose down"
 alias dcu="docker compose up -d"
-alias cp="cp -i"
-alias mv="mv -i"
-alias rm="rm -i"
 alias -g L="| less"
 alias -g H="| head"
 alias -g T="| tail"
@@ -149,11 +158,13 @@ alias -g F="| fzf"
 
 # ghq
 export GHQ_ROOT=${HOME}/.ghq
-gf() {
-  local dir
-  dir=$(ghq list > /dev/null | fzf) &&
-    cd $(ghq root)/$dir
-}
+if (( $+commands[ghq] )); then
+  gf() {
+    local dir
+    dir=$(ghq list > /dev/null | fzf) &&
+      cd $(ghq root)/$dir
+  }
+fi
 
 # fzf
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
@@ -162,27 +173,39 @@ bindkey '^B' fzf-file-widget
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
+if (( $+commands[pyenv] )); then
+  eval "$(pyenv init -)"
+  eval "$(pyenv virtualenv-init -)"
+fi
 
 # go
 export PATH=$PATH:/usr/local/go/bin
 
 # starship
-eval "$(starship init zsh)"
+if (( $+commands[starship] )); then
+  eval "$(starship init zsh)"
+fi
 
 # zoxide
-eval "$(zoxide init zsh)"
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
+fi
 
 # lsd
-alias ls="lsd"
+if (( $+commands[lsd] )); then
+  alias ls="lsd"
+fi
 
 # neovim
-alias vi="nvim"
-alias vim="nvim"
+if (( $+commands[nvim] )); then
+  alias vi="nvim"
+  alias vim="nvim"
+fi
 
 # fnm
-eval "$(fnm env --use-on-cd)"
+if (( $+commands[fnm] )); then
+  eval "$(fnm env --use-on-cd)"
+fi
 
 # zmv
 autoload -Uz zmv
