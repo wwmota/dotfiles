@@ -221,7 +221,7 @@ install-binary-tools:
 	@$(call _install_binary_tool,fnm,Schniz/fnm,fnm-linux.zip,zip,B)
 	@$(call _install_binary_tool,gh,cli/cli,linux_386.tar.gz,tar.gz,C)
 	@$(call _install_binary_tool,ghq,x-motemen/ghq,ghq_linux_amd64.zip,zip,A)
-	@$(call _install_binary_tool,lsd,Peltoche/lsd,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_binary_tool,lsd,lsd-rs/lsd,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_binary_tool,pastel,sharkdp/pastel,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_binary_tool,rg,BurntSushi/ripgrep,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_binary_tool,starship,starship/starship,x86_64-unknown-linux-musl,tar.gz,B)
