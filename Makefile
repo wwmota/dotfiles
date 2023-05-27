@@ -1,6 +1,14 @@
 PYTHON_VERSION ?= 3.11.1
 NODE_VERSION ?= v18.13.0
 
+.PHONY: update
+update: hwclock \
+        system-update \
+        tool \
+        zimfw \
+        pyenv \
+        pyenv-virtualenv \
+
 .PHONY: init
 init: hwclock \
       system-update \
