@@ -82,10 +82,7 @@ require('nvim-treesitter.configs').setup {
 -- numToStr/Comment.nvim
 require('Comment').setup()
 -- rukas-reineke/indent-blankline.nvim
-require('indent_blankline').setup {
-  show_current_context = true,
-  show_current_context_start = true,
-}
+require('ibl').setup()
 -- lewis6991/gitsigns.nvim
 require('gitsigns').setup()
 -- akinsho/bufferline.nvim
@@ -133,7 +130,7 @@ mason_lspconfig.setup({
     "dockerls",
     "jsonls",
     "pyright",
-    "sumneko_lua",
+    "lua_ls",
     "tsserver"
   }
 })
