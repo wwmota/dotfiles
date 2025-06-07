@@ -29,19 +29,21 @@ alias rm="rm -i"
 
 # plugins
 # zsh-abbr
-abbr -S -qq ll="ls -lh"
-abbr -S -qq la="ls -lha"
-abbr -S -qq gst="git status"
-abbr -S -qq gd="git diff"
-abbr -S -qq di="docker image ls"
-abbr -S -qq dp="docker container ls"
-abbr -S -qq dc="docker compose"
-abbr -S -qq ha="history -i 1"
-abbr -S -qq zmv="noglob zmv -W"
-abbr -S -g -qq F="| fzf"
-abbr -S -g -qq G="| grep"
-abbr -S -g -qq L="| less"
-bindkey " " abbr-expand-and-insert
+if [[ -n ${functions[abbr]} ]]; then
+  abbr -S -qq ll="ls -lh"
+  abbr -S -qq la="ls -lha"
+  abbr -S -qq gst="git status"
+  abbr -S -qq gd="git diff"
+  abbr -S -qq di="docker image ls"
+  abbr -S -qq dp="docker container ls"
+  abbr -S -qq dc="docker compose"
+  abbr -S -qq ha="history -i 1"
+  abbr -S -qq zmv="noglob zmv -W"
+  abbr -S -g -qq F="| fzf"
+  abbr -S -g -qq G="| grep"
+  abbr -S -g -qq L="| less"
+  bindkey " " abbr-expand-and-insert
+fi
 # zsh-history-substring-search
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
