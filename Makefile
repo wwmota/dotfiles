@@ -1,10 +1,5 @@
 # sudo apt install make
 
-# Files
-# ~/.tmux.conf
-# ~/.zshrc
-# ~/.gitignore
-# ~/.config/sheldon/plugins.toml
 # ~/.config/nvim/init.lua
 # ~/.config/nvim/lua/config/lazy.lua
 # ~/.config/nvim/lua/plugins/spec1.lua
@@ -28,23 +23,23 @@ tools: sheldon sheldon-plugins-update fzf uv volta npm uv-tool rust-tools tldr-u
 
 languages: python node
 
-#										in up
-# apt-update				OK OK
-# apt-install				OK
-# chsh							OK
-# sheldon						OK OK tools
+#                        in up
+# apt-update             OK OK
+# apt-install            OK
+# chsh                   OK
+# sheldon                OK OK tools
 # sheldon-plugins-update OK OK tools
-# docker						OK
-# fzf								OK OK tools
-# uv								OK OK tools
-# uv-tool						OK OK tools
-# python						OK    languages
-# volta							OK OK tools
-# node							OK    languages
-# rust-tools				OK OK tools
-# tldr-update				OK OK tools
-# neovim						OK OK tools
-# lazy							OK OK tools
+# docker                 OK
+# fzf                    OK OK tools
+# uv                     OK OK tools
+# uv-tool                OK OK tools
+# python                 OK    languages
+# volta                  OK OK tools
+# node                   OK    languages
+# rust-tools             OK OK tools
+# tldr-update            OK OK tools
+# neovim                 OK OK tools
+# lazy                   OK OK tools
 
 .PHONY: apt-update
 apt-update:
@@ -68,9 +63,6 @@ sheldon:
 .PHONY: sheldon-plugins-update
 sheldon-plugins-update:
 	sheldon lock --update
-
-# sheldon-init:
-# 	~/.local/bin/sheldon init --shell zsh
 
 .PHONY: docker
 docker:
@@ -170,11 +162,11 @@ endef
 
 .PHONY: rust-tools
 rust-tools:
-	@$(call _install_rust_tool,gh,cli/cli,linux_386.tar.gz,tar.gz,C)
 	@$(call _install_rust_tool,bat,sharkdp/bat,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_rust_tool,chezmoi,twpayne/chezmoi,linux-musl_amd64.tar.gz,tar.gz,B)
 	@$(call _install_rust_tool,delta,dandavison/delta,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_rust_tool,fd,sharkdp/fd,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_rust_tool,gh,cli/cli,linux_386.tar.gz,tar.gz,C)
 	@$(call _install_rust_tool,ghq,x-motemen/ghq,ghq_linux_amd64.zip,zip,A)
 	@$(call _install_rust_tool,lsd,lsd-rs/lsd,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_rust_tool,pastel,sharkdp/pastel,x86_64-unknown-linux-musl,tar.gz,A)
@@ -306,6 +298,17 @@ neovim-setup:
 # 	npm install -g neovim
 # 	npm install -g tree-sitter-cli
 
-# .PHONY: chezmoi-init
-# chezmoi-init:
-# 	chezmoi init --apply https://github.com/wwmota/dotfiles.git
+.PHONY: chezmoi-init
+chezmoi-init:
+	chezmoi init --apply https://github.com/wwmota/dotfiles.git
+
+.PHONY: chezmoi-usage
+chezmoi-usage:
+	@echo chezmoi add path/to/dotfile1
+	@echo chezmoi edit path/to/dotfile_or_symlink
+	@echo chezmoi diff
+	@echo chezmoi -v apply
+	@echo chezmoi cd
+	@echo git add
+	@echo git commit
+	@echo git push
