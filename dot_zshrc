@@ -1,139 +1,22 @@
-# Start configuration added by Zim install {{{
-#
-# User configuration sourced by interactive shells
-#
+# sheldon
+. "$HOME/.local/bin/env"
+eval "$(sheldon source)"
 
-# -----------------
-# Zsh configuration
-# -----------------
-
-#
-# History
-#
-
-# Remove older command from the history if a duplicate is to be added.
-setopt HIST_IGNORE_ALL_DUPS
-
-#
-# Input/output
-#
-
-# Set editor default keymap to emacs (`-e`) or vi (`-v`)
-bindkey -e
-
-# Prompt for spelling correction of commands.
-#setopt CORRECT
-
-# Customize spelling correction prompt.
-#SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
-
-# Remove path separator from WORDCHARS.
-WORDCHARS=${WORDCHARS//[\/]}
-
-# -----------------
-# Zim configuration
-# -----------------
-
-# Use degit instead of git as the default tool to install and update modules.
-#zstyle ':zim:zmodule' use 'degit'
-
-# --------------------
-# Module configuration
-# --------------------
-
-#
-# git
-#
-
-# Set a custom prefix for the generated aliases. The default prefix is 'G'.
-#zstyle ':zim:git' aliases-prefix 'g'
-
-#
-# input
-#
-
-# Append `../` to your input for each `.` you type after an initial `..`
-#zstyle ':zim:input' double-dot-expand yes
-
-#
-# termtitle
-#
-
-# Set a custom terminal title format using prompt expansion escape sequences.
-# See http://zsh.sourceforge.net/Doc/Release/Prompt-Expansion.html#Simple-Prompt-Escapes
-# If none is provided, the default '%n@%m: %~' is used.
-#zstyle ':zim:termtitle' format '%1~'
-
-#
-# zsh-autosuggestions
-#
-
-# Disable automatic widget re-binding on each precmd. This can be set when
-# zsh-users/zsh-autosuggestions is the last module in your ~/.zimrc.
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
-
-# Customize the style that the suggestions are shown with.
-# See https://github.com/zsh-users/zsh-autosuggestions/blob/master/README.md#suggestion-highlight-style
-#ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=242'
-
-#
-# zsh-syntax-highlighting
-#
-
-# Set what highlighters will be used.
-# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
-
-# Customize the main highlighter styles.
-# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters/main.md#how-to-tweak-it
-#typeset -A ZSH_HIGHLIGHT_STYLES
-#ZSH_HIGHLIGHT_STYLES[comment]='fg=242'
-
-# ------------------
-# Initialize modules
-# ------------------
-
-ZIM_HOME=${ZDOTDIR:-${HOME}}/.zim
-# Download zimfw plugin manager if missing.
-if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
-  if (( ${+commands[curl]} )); then
-    curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
-        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  else
-    mkdir -p ${ZIM_HOME} && wget -nv -O ${ZIM_HOME}/zimfw.zsh \
-        https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
-  fi
-fi
-# Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
-  source ${ZIM_HOME}/zimfw.zsh init -q
-fi
-# Initialize modules.
-source ${ZIM_HOME}/init.zsh
-
-# ------------------------------
-# Post-init module configuration
-# ------------------------------
-
-#
-# zsh-history-substring-search
-#
-
-zmodload -F zsh/terminfo +p:terminfo
-# Bind ^[[A/^[[B manually so up/down works both before and after zle-line-init
-for key ('^[[A' '^P' ${terminfo[kcuu1]}) bindkey ${key} history-substring-search-up
-for key ('^[[B' '^N' ${terminfo[kcud1]}) bindkey ${key} history-substring-search-down
-for key ('k') bindkey -M vicmd ${key} history-substring-search-up
-for key ('j') bindkey -M vicmd ${key} history-substring-search-down
-unset key
-# }}} End configuration added by Zim install
-
-# original setting
+# zsh
+autoload -Uz zmv
+bindkey -e  # Set editor default keymap to emacs (`-e`) or vi (`-v`)
+WORDCHARS=${WORDCHARS//[\/]}  # Remove path separator from WORDCHARS.
+HISTFILE=${HOME}/.zsh_history
 HISTSIZE=100000
 SAVEHIST=100000
-setopt HIST_NO_STORE
-setopt HIST_REDUCE_BLANKS
-setopt NO_BEEP
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_no_store
+setopt hist_reduce_blanks
+setopt inc_append_history
+setopt interactivecomments
+setopt no_beep
+setopt share_history
 export COLORTERM="truecolor"
 export EDITOR=vim
 export VISUAL=vim
@@ -143,19 +26,32 @@ export LESS="-i -M -R"
 alias cp="cp -i"
 alias mv="mv -i"
 alias rm="rm -i"
-alias la="ls -lha"
-alias gst="git status"
-alias gd="git diff"
-alias di="docker image ls"
-alias dp="docker container ls"
-alias dcb="docker compose build"
-alias dcd="docker compose down"
-alias dcu="docker compose up -d"
-alias -g L="| less"
-alias -g H="| head"
-alias -g T="| tail"
-alias -g F="| fzf"
 
+# plugins
+# zsh-abbr
+abbr -S -qq ll="ls -lh"
+abbr -S -qq la="ls -lha"
+abbr -S -qq gst="git status"
+abbr -S -qq gd="git diff"
+abbr -S -qq di="docker image ls"
+abbr -S -qq dp="docker container ls"
+abbr -S -qq dc="docker compose"
+abbr -S -qq ha="history -i 1"
+abbr -S -qq zmv="noglob zmv -W"
+abbr -S -g -qq F="| fzf"
+abbr -S -g -qq G="| grep"
+abbr -S -g -qq L="| less"
+bindkey " " abbr-expand-and-insert
+# zsh-history-substring-search
+bindkey -M emacs '^P' history-substring-search-up
+bindkey -M emacs '^N' history-substring-search-down
+# zsh-syntax-highlighting
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+
+# tools
+# fzf
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+bindkey '^B' fzf-file-widget
 # ghq
 export GHQ_ROOT=${HOME}/.ghq
 if (( $+commands[ghq] )); then
@@ -165,49 +61,55 @@ if (( $+commands[ghq] )); then
       cd $(ghq root)/$dir
   }
 fi
-
-# fzf
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-bindkey '^B' fzf-file-widget
-
-# pyenv
-export PYENV_ROOT="$HOME/.pyenv"
-command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
-if (( $+commands[pyenv] )); then
-  eval "$(pyenv init -)"
-  eval "$(pyenv virtualenv-init -)"
-fi
-
-# go
-export PATH=$PATH:/usr/local/go/bin
-
-# starship
-if (( $+commands[starship] )); then
-  eval "$(starship init zsh)"
-fi
-
-# zoxide
-if (( $+commands[zoxide] )); then
-  eval "$(zoxide init zsh)"
-fi
-
 # lsd
 if (( $+commands[lsd] )); then
   alias ls="lsd"
 fi
-
 # neovim
 if (( $+commands[nvim] )); then
   alias vi="nvim"
   alias vim="nvim"
 fi
-
-# fnm
-if (( $+commands[fnm] )); then
-  eval "$(fnm env --use-on-cd)"
+# starship
+if (( $+commands[starship] )); then
+  eval "$(starship init zsh)"
+fi
+# uv
+if (( $+commands[uv] )); then
+  eval "$(uv generate-shell-completion zsh)"
+fi
+# zoxide
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh)"
 fi
 
-# zmv
-autoload -Uz zmv
-alias zmv="noglob zmv -W"
+# functions
+fbat() {
+  local file
+  file=$(fd | fzf --preview 'bat --color=always --style=header,grid {}' --preview-window=right:60%)
+  [ -n "$file" ] && bat "$file"
+}
 
+fvim() {
+  local file
+  file=$(fd | fzf --preview 'bat --color=always --style=header,grid {}' --preview-window=right:60%)
+  [ -n "$file" ] && vim "$file"
+}
+
+fdrm() {
+  local cid
+  cid=$(docker ps -a | sed 1d | fzf -m -q "$1" | awk '{print $1}')
+  [ -n "$cid" ] && echo $cid | xargs docker rm -f
+}
+
+fdrmi() {
+  local cid
+  cid=$(docker image ls | sed 1d | fzf -m -q "$1" | awk '{print $3}')
+  [ -n "$cid" ] && echo $cid | xargs docker image rm -f
+}
+
+fdvrm() {
+  local cid
+  vname=$(docker volume ls | sed 1d | fzf -m -q "$1" | awk '{print $2}')
+  [ -n "$vname" ] && echo $vname | xargs docker volume rm -f
+}
