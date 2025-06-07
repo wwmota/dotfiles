@@ -1,5 +1,6 @@
 # Prerequisites
-# sudo apt update && apt install make
+# apt install make
+# mkdir -p ~/.ghq/github.com/wwmota && cd ~/.ghq/github.com/wwmota && git clone https://github.com/wwmota/dotfiles && cd dotfiles
 
 # target                 init update
 # apt-update             OK   OK
@@ -257,10 +258,11 @@ neovim-setup:
 # 	npm install -g tree-sitter-cli
 
 .PHONY: chezmoi-init
+chezmoi-init:
 	sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/wwmota/dotfiles.git
 
 .PHONY: chezmoi-init-command
-chezmoi-init:
+chezmoi-init-command:
 	chezmoi init --apply https://github.com/wwmota/dotfiles.git
 
 .PHONY: chezmoi-usage
