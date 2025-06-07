@@ -1,88 +1,91 @@
-PYTHON_VERSION ?= 3.11.1
-NODE_VERSION ?= v18.13.0
+# sudo apt install make
 
-.PHONY: update
-update: hwclock \
-        system-update \
-        tool \
-        zimfw \
-        pyenv \
-        pyenv-virtualenv \
+# Files
+# ~/.tmux.conf
+# ~/.zshrc
+# ~/.gitignore
+# ~/.config/sheldon/plugins.toml
+# ~/.config/nvim/init.lua
+# ~/.config/nvim/lua/config/lazy.lua
+# ~/.config/nvim/lua/plugins/spec1.lua
+
+PYTHON_VERSION ?= 3.13.3
+NODE_VERSION ?= v22.16.0
 
 .PHONY: init
-init: hwclock \
-      system-update \
-      install-packages \
+init: apt-update \
+      apt-install \
       docker \
-      wsl-systemd \
-      tool \
-      shell \
-      chezmoi-init \
+      tools \
+      languages \
+      chsh
 
-.PHONY: init-after-reboot
-init-after-reboot: language editor
+.PHONY: update
+update: apt-update \
+        tools
 
-.PHONY: tool
-tool: install-binary-tools tldr-update fzf tpm aws-cli
+tools: sheldon sheldon-plugins-update fzf uv volta npm uv-tool rust-tools tldr-update neovim lazy
 
-.PHONY: shell
-shell: chsh zimfw
+languages: python node
 
-.PHONY: language
-language: install-packages-for-pyenv pyenv pyenv-virtualenv python node go
+#										in up
+# apt-update				OK OK
+# apt-install				OK
+# chsh							OK
+# sheldon						OK OK tools
+# sheldon-plugins-update OK OK tools
+# docker						OK
+# fzf								OK OK tools
+# uv								OK OK tools
+# uv-tool						OK OK tools
+# python						OK    languages
+# volta							OK OK tools
+# node							OK    languages
+# rust-tools				OK OK tools
+# tldr-update				OK OK tools
+# neovim						OK OK tools
+# lazy							OK OK tools
 
-.PHONY: editor
-editor: neovim packer neovim-setup
-
-.PHONY: hwclock
-hwclock:
-	sudo hwclock --hctosys
-	date
-
-.PHONY: system-update
-system-update:
+.PHONY: apt-update
+apt-update:
 	sudo apt update
 	sudo apt upgrade
+	sudo apt autoremove
+	sudo apt autoclean
 
-.PHONY: install-packages
-install-packages:
-	sudo apt install graphviz jq nkf pngquant tig zip zsh
+.PHONY: apt-install
+apt-install:
+	sudo apt install nkf htop jq luarocks pngquant tig tree unzip zip zsh
 
-.PHONY: install-packages-for-pyenv
-install-packages-for-pyenv:
-	sudo apt install build-essential libssl-dev zlib1g-dev \
-	                 libbz2-dev libreadline-dev libsqlite3-dev curl llvm \
-	                 libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+.PHONY: chsh
+chsh:
+	chsh -s $(shell which zsh)
+
+.PHONY: sheldon
+sheldon:
+	curl --proto '=https' -fLsS https://rossmacarthur.github.io/install/crate.sh | bash -s -- --repo rossmacarthur/sheldon --to ~/.local/bin --force
+
+.PHONY: sheldon-plugins-update
+sheldon-plugins-update:
+	sheldon lock --update
+
+# sheldon-init:
+# 	~/.local/bin/sheldon init --shell zsh
 
 .PHONY: docker
 docker:
 	sudo apt-get update
-	sudo apt-get install ca-certificates curl gnupg lsb-release
-	sudo mkdir -p /etc/apt/keyrings
-	curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	sudo apt-get install ca-certificates curl
+	sudo install -m 0755 -d /etc/apt/keyrings
+	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+	sudo chmod a+r /etc/apt/keyrings/docker.asc
 	echo \
-	  "deb [arch=$(shell dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu \
-	  $(shell lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+		"deb [arch=$(shell dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+		$(shell grep '^UBUNTU_CODENAME=' /etc/os-release | cut -d= -f2) stable" | \
+		sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 	sudo apt-get update
-	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 	sudo usermod -aG docker $(USER)
-
-.PHONY: wsl-systemd
-wsl-systemd:
-	sudo sh -c "echo '[boot]\nsystemd=true' > /etc/wsl.conf"
-
-.PHONY: chsh
-chsh:
-	chsh -s $(shell which zsh);\
-
-.PHONY: zimfw
-zimfw:
-	if [ ! -e ~/.zim ]; then \
-	  curl -fsSL https://raw.githubusercontent.com/zimfw/install/master/install.zsh | zsh; \
-	fi
-	$(eval SHELL:=$(shell which zsh))
-	source ~/.zim/zimfw.zsh upgrade
-	source ~/.zim/zimfw.zsh update
 
 .PHONY: fzf
 fzf:
@@ -93,102 +96,47 @@ fzf:
 	  cd ~/.fzf && git pull && yes | ./install; \
 	fi
 
-.PHONY: tpm
-tpm:
-	if [ ! -e ~/.tmux/plugins/tpm ]; then \
-	  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm; \
+.PHONY: uv
+uv:
+	if [ ! -e ~/.local/bin/uv ]; then \
+	  curl -LsSf https://astral.sh/uv/install.sh | sh; \
 	else \
-	  cd ~/.tmux/plugins/tpm && git pull; \
+	  uv self update; \
 	fi
 
-.PHONY: aws-cli
-aws-cli:
-	@echo before...
-	-aws --version
-	$(eval tmp := $(shell mktemp -d))
-	curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o $(tmp)/awscliv2.zip
-	unzip -q $(tmp)/awscliv2.zip -d $(tmp)
-	sudo $(tmp)/aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
-	@echo after...
-	rm -rf $(tmp)
-	aws --version
-
-.PHONY: pyenv
-pyenv:
-	if [ ! -e ~/.pyenv ]; then \
-	  git clone https://github.com/pyenv/pyenv.git ~/.pyenv; \
-	else \
-	  cd ~/.pyenv && git pull; \
-	fi
-	cd ~/.pyenv && src/configure && make -C src
-
-.PHONY: pyenv-virtualenv
-pyenv-virtualenv:
-	if [ ! -e ~/.pyenv/plugins/pyenv-virtualenv ]; then \
-	  git clone https://github.com/pyenv/pyenv-virtualenv.git ~/.pyenv/plugins/pyenv-virtualenv; \
-	else \
-	  cd ~/.pyenv/plugins/pyenv-virtualenv && git pull; \
-	fi
+PYTHON_TOOLS = mypy pre-commit ruff
+.PHONY: uv-tool
+uv-tool:
+	@for tool in $(PYTHON_TOOLS); do \
+	  if [ ! -e ~/.local/bin/$$tool ]; then \
+	    uv tool install "$$tool"; \
+		else \
+	    uv tool upgrade "$$tool"; \
+		fi; \
+	done
+	uv tool list
 
 .PHONY: python
 python:
-	pyenv install $(PYTHON_VERSION)
-	pyenv global $(PYTHON_VERSION)
-	python --version
+	uv python install $(PYTHON_VERSION)
+
+.PHONY: volta
+volta:
+	if [ ! -e ~/.volta/bin/volta ]; then \
+	  curl https://get.volta.sh | bash; \
+	else \
+	  curl https://get.volta.sh | bash -s -- --skip-setup; \
+	fi
 
 .PHONY: node
 node:
-	fnm install $(NODE_VERSION)
-	fnm default $(NODE_VERSION)
-	node --version
+	volta install node@$(NODE_VERSION)
 
-.PHONY: go
-go:
-	@echo before...
-	-go version
-	$(eval tmp := $(shell mktemp -d))
-	curl -L https://go.dev/dl/$(shell curl -sL https://go.dev/VERSION?m=text).linux-amd64.tar.gz -o $(tmp)/go-linux-amd64.tar.gz
-	sudo rm -rf /usr/local/go
-	sudo tar -C /usr/local -xzf $(tmp)/go-linux-amd64.tar.gz
-	@echo after...
-	rm -rf $(tmp)
-	go version
+.PHONY: npm
+npm:
+	npm install -g npm
 
-.PHONY: neovim
-neovim:
-	@echo before...
-	-nvim --version
-	$(eval tmp := $(shell mktemp -d))
-	$(eval url := $(shell curl -s https://api.github.com/repos/neovim/neovim/releases/latest | \
-	                              grep browser_download_url | \
-	                              grep -m1 nvim-linux64.tar.gz | \
-	                              cut -d '"' -f 4))
-	curl -sL ${url} -o ${tmp}/nvim-linux64.tar.gz
-	tar zxf ${tmp}/nvim-linux64.tar.gz -C ${tmp}
-	sudo rm -rf /usr/local/bin/nvim-linux64
-	sudo mv ${tmp}/nvim-linux64 /usr/local/bin/
-	sudo ln -sf /usr/local/bin/nvim-linux64/bin/nvim /usr/local/bin/nvim
-	@echo after...
-	rm -rf ${tmp}
-	nvim --version
-
-.PHONY: packer
-packer:
-	if [ ! -e ~/.local/share/nvim/site/pack/packer/start/packer.nvim ]; then \
-	  git clone --depth 1 https://github.com/wbthomason/packer.nvim ~/.local/share/nvim/site/pack/packer/start/packer.nvim; \
-	else \
-	  cd ~/.local/share/nvim/site/pack/packer/start/packer.nvim && git pull; \
-	fi
-	nvim +PackerSync
-
-.PHONY: neovim-setup
-neovim-setup:
-	-pyenv virtualenv $(PYTHON_VERSION) neovim
-	~/.pyenv/versions/neovim/bin/pip install neovim
-	npm install -g neovim
-	npm install -g tree-sitter-cli
-
-define _install_binary_tool
+define _install_rust_tool
 	echo $1...
 	echo before...
 	-$1 --version
@@ -198,13 +146,13 @@ define _install_binary_tool
 	                              grep -m1 $3 | \
 	                              cut -d '"' -f 4))
 	if [ $4 = tar.gz ]; then \
-	  curl -sL $(url) -o $(tmp)/output.tar.gz; \
+	  curl -L $(url) -o $(tmp)/output.tar.gz; \
 	  tar zxf $(tmp)/output.tar.gz -C $(tmp); \
 	elif [ $4 = zip ]; then \
-	  curl -sL $(url) -o $(tmp)/output.zip; \
+	  curl -L $(url) -o $(tmp)/output.zip; \
 	  unzip -q $(tmp)/output.zip -d $(tmp); \
 	elif [ $4 = raw ]; then \
-	  curl -sL $(url) -o $(tmp)/$1; \
+	  curl -L $(url) -o $(tmp)/$1; \
 	fi
 	$(eval filename := $(shell basename $(url) | sed -e s/.tar.gz// -e s/.zip//)) \
 	if [ $5 = A ]; then \
@@ -220,27 +168,144 @@ define _install_binary_tool
 	$1 --version
 endef
 
-.PHONY: install-binary-tools
-install-binary-tools:
-	@$(call _install_binary_tool,bat,sharkdp/bat,x86_64-unknown-linux-musl,tar.gz,A)
-	@$(call _install_binary_tool,chezmoi,twpayne/chezmoi,linux-musl_amd64.tar.gz,tar.gz,B)
-	@$(call _install_binary_tool,delta,dandavison/delta,x86_64-unknown-linux-musl,tar.gz,A)
-	@$(call _install_binary_tool,fd,sharkdp/fd,x86_64-unknown-linux-musl,tar.gz,A)
-	@$(call _install_binary_tool,fnm,Schniz/fnm,fnm-linux.zip,zip,B)
-	@$(call _install_binary_tool,gh,cli/cli,linux_386.tar.gz,tar.gz,C)
-	@$(call _install_binary_tool,ghq,x-motemen/ghq,ghq_linux_amd64.zip,zip,A)
-	@$(call _install_binary_tool,lsd,lsd-rs/lsd,x86_64-unknown-linux-musl,tar.gz,A)
-	@$(call _install_binary_tool,pastel,sharkdp/pastel,x86_64-unknown-linux-musl,tar.gz,A)
-	@$(call _install_binary_tool,rg,BurntSushi/ripgrep,x86_64-unknown-linux-musl,tar.gz,A)
-	@$(call _install_binary_tool,starship,starship/starship,x86_64-unknown-linux-musl,tar.gz,B)
-	@$(call _install_binary_tool,tldr,dbrgn/tealdeer,tealdeer-linux-x86_64-musl,raw,B)
-	@$(call _install_binary_tool,xsv,BurntSushi/xsv,x86_64-unknown-linux-musl,tar.gz,B)
-	@$(call _install_binary_tool,zoxide,ajeetdsouza/zoxide,x86_64-unknown-linux-musl,tar.gz,B)
-
-.PHONY: chezmoi-init
-chezmoi-init:
-	chezmoi init --apply https://github.com/wwmota/dotfiles.git
+.PHONY: rust-tools
+rust-tools:
+	@$(call _install_rust_tool,gh,cli/cli,linux_386.tar.gz,tar.gz,C)
+	@$(call _install_rust_tool,bat,sharkdp/bat,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_rust_tool,chezmoi,twpayne/chezmoi,linux-musl_amd64.tar.gz,tar.gz,B)
+	@$(call _install_rust_tool,delta,dandavison/delta,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_rust_tool,fd,sharkdp/fd,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_rust_tool,ghq,x-motemen/ghq,ghq_linux_amd64.zip,zip,A)
+	@$(call _install_rust_tool,lsd,lsd-rs/lsd,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_rust_tool,pastel,sharkdp/pastel,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_rust_tool,rg,BurntSushi/ripgrep,x86_64-unknown-linux-musl,tar.gz,A)
+	@$(call _install_rust_tool,starship,starship/starship,x86_64-unknown-linux-musl,tar.gz,B)
+	@$(call _install_rust_tool,tldr,tealdeer-rs/tealdeer,tealdeer-linux-x86_64-musl,raw,B)
+	@$(call _install_rust_tool,xsv,BurntSushi/xsv,x86_64-unknown-linux-musl,tar.gz,B)
+	@$(call _install_rust_tool,zoxide,ajeetdsouza/zoxide,x86_64-unknown-linux-musl,tar.gz,B)
 
 .PHONY: tldr-update
 tldr-update:
 	tldr --update
+
+.PHONY: neovim
+neovim:
+	@echo before...
+	-nvim --version
+	$(eval tmp := $(shell mktemp -d))
+	$(eval url := $(shell curl -s https://api.github.com/repos/neovim/neovim/releases/latest | \
+	                              grep browser_download_url | \
+	                              grep -m1 nvim-linux-x86_64.tar.gz | \
+	                              cut -d '"' -f 4))
+	curl -L ${url} -o ${tmp}/nvim-linux-x86_64.tar.gz
+	tar zxf ${tmp}/nvim-linux-x86_64.tar.gz -C ${tmp}
+	sudo rm -rf /usr/local/bin/nvim-linux-x86_64
+	sudo mv ${tmp}/nvim-linux-x86_64 /usr/local/bin/
+	sudo ln -sf /usr/local/bin/nvim-linux-x86_64/bin/nvim /usr/local/bin/nvim
+	@echo after...
+	rm -rf ${tmp}
+	nvim --version
+
+.PHONY: lazy
+lazy:
+	nvim --headless "+Lazy! sync" +qa
+
+.PHONY: neovim-setup
+neovim-setup:
+	npm install -g neovim
+#	npm install -g tree-sitter-cli
+#	-pyenv virtualenv $(PYTHON_VERSION) neovim
+#	~/.pyenv/versions/neovim/bin/pip install neovim
+
+#############
+
+# .PHONY: update
+# update: hwclock \
+#         system-update \
+#         tool \
+#         zimfw \
+#         pyenv \
+#         pyenv-virtualenv \
+
+# .PHONY: init
+# init: hwclock \
+#       system-update \
+#       install-packages \
+#       docker \
+#       wsl-systemd \
+#       tool \
+#       shell \
+#       chezmoi-init \
+
+# .PHONY: init-after-reboot
+# init-after-reboot: language editor
+
+# .PHONY: tool
+# tool: install-rust-tools tldr-update fzf tpm aws-cli
+
+# .PHONY: shell
+# shell: chsh zimfw
+
+# .PHONY: language
+# language: install-packages-for-pyenv pyenv pyenv-virtualenv python node go
+
+# .PHONY: editor
+# editor: neovim packer neovim-setup
+
+# .PHONY: hwclock
+# hwclock:
+# 	sudo hwclock --hctosys
+# 	date
+
+# .PHONY: install-packages-for-pyenv
+# install-packages-for-pyenv:
+# 	sudo apt install build-essential libssl-dev zlib1g-dev \
+# 	                 libbz2-dev libreadline-dev libsqlite3-dev curl llvm \
+# 	                 libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
+
+# .PHONY: wsl-systemd
+# wsl-systemd:
+# 	sudo sh -c "echo '[boot]\nsystemd=true' > /etc/wsl.conf"
+
+# .PHONY: tpm
+# tpm:
+# 	if [ ! -e ~/.tmux/plugins/tpm ]; then \
+# 	  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm; \
+# 	else \
+# 	  cd ~/.tmux/plugins/tpm && git pull; \
+# 	fi
+
+# .PHONY: aws-cli
+# aws-cli:
+# 	@echo before...
+# 	-aws --version
+# 	$(eval tmp := $(shell mktemp -d))
+# 	curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o $(tmp)/awscliv2.zip
+# 	unzip -q $(tmp)/awscliv2.zip -d $(tmp)
+# 	sudo $(tmp)/aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+# 	@echo after...
+# 	rm -rf $(tmp)
+# 	aws --version
+
+# .PHONY: go
+# go:
+# 	@echo before...
+# 	-go version
+# 	$(eval tmp := $(shell mktemp -d))
+# 	curl -L https://go.dev/dl/$(shell curl -sL https://go.dev/VERSION?m=text).linux-amd64.tar.gz -o $(tmp)/go-linux-amd64.tar.gz
+# 	sudo rm -rf /usr/local/go
+# 	sudo tar -C /usr/local -xzf $(tmp)/go-linux-amd64.tar.gz
+# 	@echo after...
+# 	rm -rf $(tmp)
+# 	go version
+
+# .PHONY: neovim-setup
+# neovim-setup:
+# 	-pyenv virtualenv $(PYTHON_VERSION) neovim
+# 	~/.pyenv/versions/neovim/bin/pip install neovim
+# 	npm install -g neovim
+# 	npm install -g tree-sitter-cli
+
+# .PHONY: chezmoi-init
+# chezmoi-init:
+# 	chezmoi init --apply https://github.com/wwmota/dotfiles.git
