@@ -1,8 +1,23 @@
-# sudo apt install make
+# Prerequisites
+# sudo apt update && apt install make
 
-# ~/.config/nvim/init.lua
-# ~/.config/nvim/lua/config/lazy.lua
-# ~/.config/nvim/lua/plugins/spec1.lua
+# target                 init update
+# apt-update             OK   OK
+# apt-install            OK
+# chsh                   OK
+# docker                 OK
+# python                 OK          languages
+# node                   OK          languages
+# sheldon                OK   OK     tools
+# sheldon-plugins-update OK   OK     tools
+# fzf                    OK   OK     tools
+# uv                     OK   OK     tools
+# uv-tool                OK   OK     tools
+# volta                  OK   OK     tools
+# rust-tools             OK   OK     tools
+# tldr-update            OK   OK     tools
+# neovim                 OK   OK     tools
+# lazy                   OK   OK     tools
 
 PYTHON_VERSION ?= 3.13.3
 NODE_VERSION ?= v22.16.0
@@ -11,35 +26,30 @@ NODE_VERSION ?= v22.16.0
 init: apt-update \
       apt-install \
       docker \
-      tools \
-      languages \
+      sheldon \
+      chezmoi-init \
       chsh
 
 .PHONY: update
 update: apt-update \
         tools
 
-tools: sheldon sheldon-plugins-update fzf uv volta npm uv-tool rust-tools tldr-update neovim lazy
+.PHONY: tools
+tools: sheldon \
+       sheldon-plugins-update \
+       fzf \
+       uv \
+       volta \
+       npm \
+       uv-tool \
+       rust-tools \
+       tldr-update \
+       neovim \
+       lazy
 
-languages: python node
-
-#                        in up
-# apt-update             OK OK
-# apt-install            OK
-# chsh                   OK
-# sheldon                OK OK tools
-# sheldon-plugins-update OK OK tools
-# docker                 OK
-# fzf                    OK OK tools
-# uv                     OK OK tools
-# uv-tool                OK OK tools
-# python                 OK    languages
-# volta                  OK OK tools
-# node                   OK    languages
-# rust-tools             OK OK tools
-# tldr-update            OK OK tools
-# neovim                 OK OK tools
-# lazy                   OK OK tools
+.PHONY: languages
+languages: python \
+           node
 
 .PHONY: apt-update
 apt-update:
@@ -235,61 +245,9 @@ neovim-setup:
 # .PHONY: tool
 # tool: install-rust-tools tldr-update fzf tpm aws-cli
 
-# .PHONY: shell
-# shell: chsh zimfw
-
-# .PHONY: language
-# language: install-packages-for-pyenv pyenv pyenv-virtualenv python node go
-
-# .PHONY: editor
-# editor: neovim packer neovim-setup
-
-# .PHONY: hwclock
-# hwclock:
-# 	sudo hwclock --hctosys
-# 	date
-
-# .PHONY: install-packages-for-pyenv
-# install-packages-for-pyenv:
-# 	sudo apt install build-essential libssl-dev zlib1g-dev \
-# 	                 libbz2-dev libreadline-dev libsqlite3-dev curl llvm \
-# 	                 libncursesw5-dev xz-utils tk-dev libxml2-dev libxmlsec1-dev libffi-dev liblzma-dev
-
 # .PHONY: wsl-systemd
 # wsl-systemd:
 # 	sudo sh -c "echo '[boot]\nsystemd=true' > /etc/wsl.conf"
-
-# .PHONY: tpm
-# tpm:
-# 	if [ ! -e ~/.tmux/plugins/tpm ]; then \
-# 	  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm; \
-# 	else \
-# 	  cd ~/.tmux/plugins/tpm && git pull; \
-# 	fi
-
-# .PHONY: aws-cli
-# aws-cli:
-# 	@echo before...
-# 	-aws --version
-# 	$(eval tmp := $(shell mktemp -d))
-# 	curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o $(tmp)/awscliv2.zip
-# 	unzip -q $(tmp)/awscliv2.zip -d $(tmp)
-# 	sudo $(tmp)/aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
-# 	@echo after...
-# 	rm -rf $(tmp)
-# 	aws --version
-
-# .PHONY: go
-# go:
-# 	@echo before...
-# 	-go version
-# 	$(eval tmp := $(shell mktemp -d))
-# 	curl -L https://go.dev/dl/$(shell curl -sL https://go.dev/VERSION?m=text).linux-amd64.tar.gz -o $(tmp)/go-linux-amd64.tar.gz
-# 	sudo rm -rf /usr/local/go
-# 	sudo tar -C /usr/local -xzf $(tmp)/go-linux-amd64.tar.gz
-# 	@echo after...
-# 	rm -rf $(tmp)
-# 	go version
 
 # .PHONY: neovim-setup
 # neovim-setup:
@@ -299,11 +257,15 @@ neovim-setup:
 # 	npm install -g tree-sitter-cli
 
 .PHONY: chezmoi-init
+	sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/wwmota/dotfiles.git
+
+.PHONY: chezmoi-init-command
 chezmoi-init:
 	chezmoi init --apply https://github.com/wwmota/dotfiles.git
 
 .PHONY: chezmoi-usage
 chezmoi-usage:
+	@echo chezmoi update
 	@echo chezmoi add path/to/dotfile1
 	@echo chezmoi edit path/to/dotfile_or_symlink
 	@echo chezmoi diff
