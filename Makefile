@@ -28,6 +28,7 @@ init: apt-update \
       apt-install \
       docker \
       sheldon \
+      uv \
       chezmoi-init \
       chsh
 
