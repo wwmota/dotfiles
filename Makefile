@@ -260,7 +260,7 @@ neovim-setup:
 
 .PHONY: chezmoi-init
 chezmoi-init:
-	sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/wwmota/dotfiles.git
+	sh -c "$$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/wwmota/dotfiles.git
 
 .PHONY: chezmoi-init-command
 chezmoi-init-command:
