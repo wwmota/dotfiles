@@ -1,5 +1,4 @@
 # sheldon
-. "$HOME/.local/bin/env"
 eval "$(sheldon source)"
 
 # zsh
@@ -77,9 +76,13 @@ if (( $+commands[starship] )); then
   eval "$(starship init zsh)"
 fi
 # uv
+. "$HOME/.local/bin/env"
 if (( $+commands[uv] )); then
   eval "$(uv generate-shell-completion zsh)"
 fi
+# volta
+export VOLTA_HOME="$HOME/.volta"
+export PATH="$VOLTA_HOME/bin:$PATH"
 # zoxide
 if (( $+commands[zoxide] )); then
   eval "$(zoxide init zsh)"
