@@ -65,7 +65,7 @@ apt-update:
 
 .PHONY: apt-install
 apt-install:
-	sudo apt install nkf htop jq luarocks pngquant tig tree unzip zip zsh
+	sudo apt install -y nkf htop jq luarocks pngquant tig tree unzip zip zsh
 
 .PHONY: chsh
 chsh:
@@ -81,8 +81,8 @@ sheldon-plugins-update:
 
 .PHONY: docker
 docker:
-	sudo apt-get update
-	sudo apt-get install ca-certificates curl
+	sudo apt update
+	sudo apt install -y ca-certificates curl
 	sudo install -m 0755 -d /etc/apt/keyrings
 	sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
 	sudo chmod a+r /etc/apt/keyrings/docker.asc
@@ -90,8 +90,8 @@ docker:
 		"deb [arch=$(shell dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
 		$(shell grep '^UBUNTU_CODENAME=' /etc/os-release | cut -d= -f2) stable" | \
 		sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-	sudo apt-get update
-	sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+	sudo apt update
+	sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
 	sudo usermod -aG docker $(USER)
 
 .PHONY: fzf
@@ -264,6 +264,7 @@ neovim-setup:
 .PHONY: chezmoi-init
 chezmoi-init:
 	sh -c "$$(curl -fsLS get.chezmoi.io)" -- init --apply https://github.com/wwmota/dotfiles.git
+	rm -rf ./bin
 
 .PHONY: chezmoi-init-command
 chezmoi-init-command:
