@@ -1,4 +1,5 @@
 # sheldon
+. "$HOME/.local/bin/env"
 eval "$(sheldon source)"
 
 # zsh
@@ -76,7 +77,6 @@ if (( $+commands[starship] )); then
   eval "$(starship init zsh)"
 fi
 # uv
-. "$HOME/.local/bin/env"
 if (( $+commands[uv] )); then
   eval "$(uv generate-shell-completion zsh)"
 fi
