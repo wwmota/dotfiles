@@ -7,8 +7,8 @@
 # apt-install            OK
 # chsh                   OK
 # docker                 OK
-# python                 OK          languages
-# node                   OK          languages
+# python                 OK   OK     tools, languages
+# node                   OK   OK     tools, languages
 # sheldon                OK   OK     tools
 # sheldon-plugins-update OK   OK     tools
 # fzf                    OK   OK     tools
@@ -42,7 +42,9 @@ tools: sheldon \
        sheldon-plugins-update \
        fzf \
        uv \
+       python \
        volta \
+       node \
        npm \
        uv-tool \
        rust-tools \
