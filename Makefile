@@ -29,6 +29,7 @@ init: apt-update \
       docker \
       sheldon \
       uv \
+      volta \
       chezmoi-init \
       chsh
 
