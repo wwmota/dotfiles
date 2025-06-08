@@ -1,6 +1,11 @@
-# Prerequisites
-# apt install make
-# mkdir -p ~/.ghq/github.com/wwmota && cd ~/.ghq/github.com/wwmota && git clone https://github.com/wwmota/dotfiles && cd dotfiles
+# Usage
+# $ apt install make
+# $ mkdir -p ~/.ghq/github.com/wwmota && cd ~/.ghq/github.com/wwmota && git clone https://github.com/wwmota/dotfiles && cd dotfiles
+# $ make init
+# $ exit
+# $ cd ~/.ghq/github.com/wwmota/dotfiles
+# $ make update
+# $ exit
 
 # target                 init update
 # apt-update             OK   OK
@@ -98,7 +103,7 @@ docker:
 fzf:
 	if [ ! -e ~/.fzf ]; then \
 	  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf; \
-	  ~/.fzf/install; \
+	  ~/.fzf/install --all; \
 	else \
 	  cd ~/.fzf && git pull && yes | ./install; \
 	fi
