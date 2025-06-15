@@ -70,7 +70,7 @@ apt-update:
 
 .PHONY: apt-install
 apt-install:
-	sudo apt install -y nkf htop jq luarocks pngquant tig tree unzip zip zsh
+	sudo apt install -y nkf htop jq luarocks pngquant tig tmux tree unzip zip zsh
 
 .PHONY: chsh
 chsh:
