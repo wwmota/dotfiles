@@ -29,7 +29,8 @@ PYTHON_VERSION ?= 3.13.3
 NODE_VERSION ?= v22.16.0
 
 .PHONY: init
-init: apt-update \
+init: wsl-systemd \
+      apt-update \
       apt-install \
       docker \
       sheldon \
@@ -67,6 +68,10 @@ apt-update:
 	sudo apt upgrade
 	sudo apt autoremove
 	sudo apt autoclean
+
+.PHONY: wsl-systemd
+wsl-systemd:
+	sudo sh -c "echo '[boot]\nsystemd=true' >> /etc/wsl.conf"
 
 .PHONY: apt-install
 apt-install:
@@ -228,43 +233,6 @@ neovim-setup:
 #	npm install -g tree-sitter-cli
 #	-pyenv virtualenv $(PYTHON_VERSION) neovim
 #	~/.pyenv/versions/neovim/bin/pip install neovim
-
-#############
-
-# .PHONY: update
-# update: hwclock \
-#         system-update \
-#         tool \
-#         zimfw \
-#         pyenv \
-#         pyenv-virtualenv \
-
-# .PHONY: init
-# init: hwclock \
-#       system-update \
-#       install-packages \
-#       docker \
-#       wsl-systemd \
-#       tool \
-#       shell \
-#       chezmoi-init \
-
-# .PHONY: init-after-reboot
-# init-after-reboot: language editor
-
-# .PHONY: tool
-# tool: install-rust-tools tldr-update fzf tpm aws-cli
-
-# .PHONY: wsl-systemd
-# wsl-systemd:
-# 	sudo sh -c "echo '[boot]\nsystemd=true' > /etc/wsl.conf"
-
-# .PHONY: neovim-setup
-# neovim-setup:
-# 	-pyenv virtualenv $(PYTHON_VERSION) neovim
-# 	~/.pyenv/versions/neovim/bin/pip install neovim
-# 	npm install -g neovim
-# 	npm install -g tree-sitter-cli
 
 .PHONY: chezmoi-init
 chezmoi-init:
