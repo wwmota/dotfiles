@@ -25,8 +25,8 @@
 # neovim                 OK   OK     tools
 # lazy                   OK   OK     tools
 
-PYTHON_VERSION ?= 3.13.3
-NODE_VERSION ?= v22.16.0
+PYTHON_VERSION ?= 3.13.7
+NODE_VERSION ?= v22.19.0
 
 .PHONY: init
 init: wsl-systemd \
@@ -254,3 +254,15 @@ chezmoi-usage:
 	@echo git add
 	@echo git commit
 	@echo git push
+
+.PHONY: aws-cli
+aws-cli:
+	@echo before...
+	-aws --version
+	$(eval tmp := $(shell mktemp -d))
+	curl https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip -o $(tmp)/awscliv2.zip
+	unzip -q $(tmp)/awscliv2.zip -d $(tmp)
+	sudo $(tmp)/aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli --update
+	@echo after...
+	rm -rf $(tmp)
+	aws --version
