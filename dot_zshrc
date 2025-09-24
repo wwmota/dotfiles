@@ -5,6 +5,7 @@ eval "$(sheldon source)"
 # zsh
 autoload -Uz zmv
 bindkey -e  # Set editor default keymap to emacs (`-e`) or vi (`-v`)
+zstyle ':completion:*:default' menu select=2
 WORDCHARS=${WORDCHARS//[\/]}  # Remove path separator from WORDCHARS.
 HISTFILE=${HOME}/.zsh_history
 HISTSIZE=100000
