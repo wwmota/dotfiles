@@ -1,2 +1,5 @@
 [python]
 python_binary = ".venv/bin/python"
+
+[aws]
+disabled = true
