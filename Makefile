@@ -75,7 +75,7 @@ wsl-systemd:
 
 .PHONY: apt-install
 apt-install:
-	sudo apt install -y nkf htop jq luarocks pngquant tig tmux tree unzip zip zsh
+	sudo apt install -y nkf htop jq luarocks pngquant sqlite3 tig tmux tree unzip zip zsh
 
 .PHONY: chsh
 chsh:
@@ -165,13 +165,16 @@ define _install_rust_tool
 	if [ $4 = tar.gz ]; then \
 	  curl -L $(url) -o $(tmp)/output.tar.gz; \
 	  tar zxf $(tmp)/output.tar.gz -C $(tmp); \
+	elif [ $4 = tar.xz ]; then \
+	  curl -L $(url) -o $(tmp)/output.tar.xz; \
+	  tar -xf $(tmp)/output.tar.xz -C $(tmp); \
 	elif [ $4 = zip ]; then \
 	  curl -L $(url) -o $(tmp)/output.zip; \
 	  unzip -q $(tmp)/output.zip -d $(tmp); \
 	elif [ $4 = raw ]; then \
 	  curl -L $(url) -o $(tmp)/$1; \
 	fi
-	$(eval filename := $(shell basename $(url) | sed -e s/.tar.gz// -e s/.zip//)) \
+	$(eval filename := $(shell basename $(url) | sed -e s/.tar.gz// -e s/.tar.xz// -e s/.zip//)) \
 	if [ $5 = A ]; then \
 	  sudo mv $(tmp)/$(filename)/$1 /usr/local/bin/; \
 	elif [ $5 = B ]; then \
@@ -198,6 +201,7 @@ rust-tools:
 	@$(call _install_rust_tool,rg,BurntSushi/ripgrep,x86_64-unknown-linux-musl,tar.gz,A)
 	@$(call _install_rust_tool,starship,starship/starship,x86_64-unknown-linux-musl,tar.gz,B)
 	@$(call _install_rust_tool,tldr,tealdeer-rs/tealdeer,tealdeer-linux-x86_64-musl,raw,B)
+	@$(call _install_rust_tool,watchexec,watchexec/watchexec,x86_64-unknown-linux-musl.tar.xz,tar.xz,A)
 	@$(call _install_rust_tool,xsv,BurntSushi/xsv,x86_64-unknown-linux-musl,tar.gz,B)
 	@$(call _install_rust_tool,zoxide,ajeetdsouza/zoxide,x86_64-unknown-linux-musl,tar.gz,B)
 
