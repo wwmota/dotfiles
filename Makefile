@@ -250,7 +250,7 @@ chezmoi-init-command:
 
 .PHONY: chezmoi-update
 chezmoi-update:
-	chezmoi update
+	chezmoi update --force
 
 .PHONY: chezmoi-usage
 chezmoi-usage:
