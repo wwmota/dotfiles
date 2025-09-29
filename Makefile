@@ -1,5 +1,5 @@
 # Usage
-# $ apt install make
+# $ sudo apt install make
 # $ mkdir -p ~/.ghq/github.com/wwmota && cd ~/.ghq/github.com/wwmota && git clone https://github.com/wwmota/dotfiles && cd dotfiles
 # $ make init
 # $ exit
@@ -41,7 +41,8 @@ init: wsl-systemd \
 
 .PHONY: update
 update: apt-update \
-        tools
+        tools \
+        chezmoi-update
 
 .PHONY: tools
 tools: sheldon \
@@ -246,6 +247,10 @@ chezmoi-init:
 .PHONY: chezmoi-init-command
 chezmoi-init-command:
 	chezmoi init --apply https://github.com/wwmota/dotfiles.git
+
+.PHONY: chezmoi-update
+chezmoi-update:
+	chezmoi update
 
 .PHONY: chezmoi-usage
 chezmoi-usage:
