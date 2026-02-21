@@ -111,7 +111,7 @@ fdrm() {
 
 fdrmi() {
   local cid
-  cid=$(docker image ls | sed 1d | fzf -m -q "$1" | awk '{print $3}')
+  cid=$(docker image ls | sed 1d | fzf -m -q "$1" | awk '{print $1}')
   [ -n "$cid" ] && echo $cid | xargs docker image rm -f
 }
 
